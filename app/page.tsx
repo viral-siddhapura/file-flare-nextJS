@@ -5,21 +5,9 @@ import { useState } from "react";
 
 export default function Home() {
 
-  const [uploadComplete, setUploadComplete] = useState(false);
-
-  const handleUploadComplete = () => {
-    setUploadComplete(true);
-  };
-
   return (
     <main className="flex flex-row items-center justify-center py-40">
-      {
-        uploadComplete ? (
-          <UploadComplete />
-        ) : (
-          <UploadFile onUploadComplete={handleUploadComplete} />
-        )
-      }
+      <UploadFile />
       <NavBarInformation />
     </main>
   );
