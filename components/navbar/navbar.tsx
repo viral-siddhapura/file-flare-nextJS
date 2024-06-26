@@ -1,9 +1,6 @@
 import Link from "next/link"
 import Image from "next/image"
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar"
-import UploadFile from "../upload/uploadFile"
-import NavBarInformation from "./navbar_information"
-import UploadComplete from "../upload/upload_complete"
 
 export default function NavBar() {
     return (
