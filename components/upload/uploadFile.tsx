@@ -10,15 +10,23 @@ import UploadComplete from "./upload_complete";
 
 const UploadFile = ({ onUploadComplete }: any) => {
 
-    const [file, setFile] = useState<File | null>(null);
+    const [files, setFiles] = useState<File[]>([]);
     const [isPending, startTransition] = useTransition();
     const fileInputRef = useRef<HTMLInputElement>(null);
 
     const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         if (e.target.files && e.target.files.length > 0) {
-            setFile(e.target.files[0]);
+            setFiles(Array.from(e.target.files));
         }
     };
+
+    const onAddFiles = (newFile: File) => {
+        setFiles(prevFiles => [...prevFiles, newFile]);
+    };
+
+    const deleteFile = (index: number) => {
+        setFiles((prevFiles) => prevFiles.filter((_, i) => i !== index));
+    }
 
     const handleButtonClick = async () => {
 
@@ -26,7 +34,7 @@ const UploadFile = ({ onUploadComplete }: any) => {
             fileInputRef.current.click();
         }
 
-        if (!file) {
+        if (!files) {
             console.log("No file selected");
             return;
         };
@@ -34,9 +42,13 @@ const UploadFile = ({ onUploadComplete }: any) => {
         startTransition(async () => {
             try {
                 // Simulate file upload action
-                const data = await uploadFileAction(file);
-                console.log(data.fileName, data.fileSize, data.fileType);
-                onUploadComplete(); // Call the prop function to update the state in Home component
+                for (const file in files) {
+                    const data = await uploadFileAction(files[file]);
+                    console.log(data.fileName, data.fileSize, data.fileType);
+                }
+
+                // Call the prop function to update the state in Home component
+                onUploadComplete();
             } catch (error) {
                 console.log("Error uploading file. Please try again.");
             }
@@ -46,9 +58,7 @@ const UploadFile = ({ onUploadComplete }: any) => {
     return (
         <>
             {
-                file ? (
-                    <UploadComplete files={[file]} />
-                ) : (
+                files.length === 0 ? (
                     <div className="flex basis-1/2 items-center justify-center">
                         <Card className="w-full max-w-md p-8 text-center">
                             <UploadInformation />
@@ -71,6 +81,8 @@ const UploadFile = ({ onUploadComplete }: any) => {
                             </CardContent>
                         </Card>
                     </div>
+                ) : (
+                    <UploadComplete files={files} onAddFiles={onAddFiles} onDeleteFile={deleteFile}/>
                 )
             }
         </>
