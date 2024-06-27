@@ -1,10 +1,11 @@
 import { useState } from "react";
 import { Label } from "../ui/label"
 import { Switch } from "../ui/switch"
+import { useFileUploadOptions } from "./file-upload-options-context";
 
 const PasswordProtection = () => {
 
-    const [isPasswordProtected, setIsPasswordProtected] = useState(false);
+    const { isPasswordProtected, setIsPasswordProtected } = useFileUploadOptions();
     
     return (
         <div>
