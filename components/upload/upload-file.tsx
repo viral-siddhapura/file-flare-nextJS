@@ -8,15 +8,15 @@ import { uploadFileAction } from "@/actions/upload_file";
 import { Input } from "../ui/input";
 import UploadComplete from "./upload-complete";
 import { FileUploadContext } from "./file-upload-context";
+import { FileUploadOptionsProvider } from "./file-upload-options-context";
 
 const UploadFile = () => {
 
     /**
-     *   use Reeducer and Context API to manage file upload state
+     *   1. use Reeducer and Context API to manage file upload state
      * */
 
     const { state, dispatch } = useContext(FileUploadContext);
-    const [isPending, startTransition] = useTransition();
     const fileInputRef = useRef<HTMLInputElement>(null);
 
     const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -48,10 +48,9 @@ const UploadFile = () => {
                                 <Button
                                     variant="default"
                                     className="w-full mt-8"
-                                    disabled={isPending}
                                     onClick={handleButtonClick}
                                 >
-                                    {isPending ? "Uploading..." : "Select File(s)"}
+                                    Select File(s)
                                 </Button>
                                 <Input
                                     type="file"
@@ -64,7 +63,9 @@ const UploadFile = () => {
                         </Card>
                     </div>
                 ) : (
-                    <UploadComplete />
+                    <FileUploadOptionsProvider >
+                        <UploadComplete />
+                    </FileUploadOptionsProvider>
                 )
             }
         </>
