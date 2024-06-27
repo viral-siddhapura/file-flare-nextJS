@@ -2,11 +2,11 @@
 
 import { Card, CardContent } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
-import UploadInformation from "./upload_information"
+import UploadInformation from "./upload-information"
 import { useRef, useState, useTransition } from "react"
 import { uploadFileAction } from "@/actions/upload_file";
 import { Input } from "../ui/input";
-import UploadComplete from "./upload_complete";
+import UploadComplete from "./upload-complete";
 
 const UploadFile = ({ onUploadComplete }: any) => {
 
