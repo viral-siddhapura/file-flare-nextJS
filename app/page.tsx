@@ -1,7 +1,5 @@
 import NavBarInformation from "@/components/navbar/navbar_information";
-import UploadFile from "@/components/upload/uploadFile";
-import UploadComplete from "@/components/upload/upload_complete";
-import { useState } from "react";
+import UploadFile from "@/components/upload/upload-file";
 
 export default function Home() {
 
