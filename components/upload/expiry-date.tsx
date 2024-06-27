@@ -1,11 +1,15 @@
 import { Label } from "../ui/label"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "../ui/select"
+import { useFileUploadOptions } from "./file-upload-options-context";
 
 const ExpirtyDate = () => {
+
+    const { expiryDate, setExpiryDate } = useFileUploadOptions();
+
     return (
         <div>
             <Label htmlFor="expiration-date">Expiration Date</Label>
-            <Select>
+            <Select value={expiryDate} onValueChange={setExpiryDate}>
                 <SelectTrigger id="expiration-date">
                     <SelectValue placeholder="7 day" />
                 </SelectTrigger>
