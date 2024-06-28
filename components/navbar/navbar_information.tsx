@@ -36,6 +36,7 @@ export default function NavBarInformation() {
                         width={64}
                         height={64}
                     />
+                    
                     <p className="mt-2 text-sm font-semibold">End-to-End Encryption</p>
                 </div>
                 <div className="flex flex-col items-center justify-center">
