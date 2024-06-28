@@ -42,7 +42,7 @@ const UploadFile = () => {
             {
                 state.files.length === 0 ? (
                     <div className="flex basis-1/2 items-center justify-center">
-                        <Card className="w-full max-w-md p-8 text-center">
+                        <Card className="w-full max-w-lg p-8 text-center">
                             <UploadInformation />
                             <CardContent>
                                 <Button
@@ -54,6 +54,7 @@ const UploadFile = () => {
                                 </Button>
                                 <Input
                                     type="file"
+                                    multiple
                                     ref={fileInputRef}
                                     onChange={handleFileChange}
                                     style={{ display: 'none' }}
