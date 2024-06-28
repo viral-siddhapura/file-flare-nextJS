@@ -7,6 +7,8 @@ interface FileUploadOptionsContextType {
     setDownloadLimit: (limit: string) => void;
     isPasswordProtected: boolean;
     setIsPasswordProtected: (isProtected: boolean) => void;
+    emails: string[];
+    setEmails: (emails: string[]) => void;
 }
 
 const FileUploadOptionsContext = createContext<FileUploadOptionsContextType | undefined>(undefined);
@@ -23,10 +25,11 @@ export const FileUploadOptionsProvider = ({ children }: { children: ReactNode })
     const [expiryDate, setExpiryDate] = useState<string>('1 day');
     const [downloadLimit, setDownloadLimit] = useState<string>('2');
     const [isPasswordProtected, setIsPasswordProtected] = useState<boolean>(false);
+    const [emails, setEmails] = useState<string[]>([]);
 
     return (
         <FileUploadOptionsContext.Provider
-            value={{ expiryDate, setExpiryDate, downloadLimit, setDownloadLimit, isPasswordProtected, setIsPasswordProtected }}
+            value={{ expiryDate, setExpiryDate, downloadLimit, setDownloadLimit, isPasswordProtected, setIsPasswordProtected, emails, setEmails }}
         >
             {children}
         </FileUploadOptionsContext.Provider>
