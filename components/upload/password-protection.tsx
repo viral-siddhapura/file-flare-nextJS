@@ -6,7 +6,7 @@ import { useFileUploadOptions } from "./file-upload-options-context";
 const PasswordProtection = () => {
 
     const { isPasswordProtected, setIsPasswordProtected } = useFileUploadOptions();
-    
+
     return (
         <div>
             <div className="border-2 rounded-md border-slate-300 p-2">
