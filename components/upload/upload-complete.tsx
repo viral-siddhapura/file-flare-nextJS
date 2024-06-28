@@ -11,7 +11,7 @@ import { useFileUploadOptions } from "./file-upload-options-context"
 const UploadComplete = () => {
 
     const { state, dispatch } = useContext(FileUploadContext);
-    const { expiryDate, downloadLimit, isPasswordProtected } = useFileUploadOptions();
+    const { expiryDate, downloadLimit, isPasswordProtected, emails } = useFileUploadOptions();
 
     useEffect(() => {
         const totalUploadedSizeMB = state.files.reduce((acc: number, file: { size: number }) => acc + (file.size / 1024 / 1024), 0)
@@ -41,6 +41,7 @@ const UploadComplete = () => {
         console.log("Download Limit:", downloadLimit);
         console.log("Password Protection:", isPasswordProtected ? "Enabled" : "Disabled");
         console.log("Files:", state.files);
+        console.log("Emails:", emails);
     }
 
     return (
@@ -61,7 +62,7 @@ const UploadComplete = () => {
                         ))}
                     </div>
                     <Button variant="outline" size="lg" className="w-full" onClick={handleFileSelection}>
-                        <Image src="/plus_icon.svg" alt="Add" width={24} height={24}/>
+                        <Image src="/plus_icon.svg" alt="Add" width={24} height={24} />
                         Add More Files ( {state.remainingSpace.toFixed(2)} Remaining )
                     </Button>
                 </CardHeader>
