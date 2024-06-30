@@ -6,7 +6,7 @@ export default function Home() {
 
   return (
     <FileUploadProvider>
-      <main className="flex flex-row items-center justify-center py-40">
+      <main className="flex flex-row items-center justify-between py-40">
         <UploadFile />
         <NavBarInformation />
       </main>

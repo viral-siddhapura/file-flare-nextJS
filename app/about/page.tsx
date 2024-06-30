@@ -1,5 +1,9 @@
+import UnlockLink from "@/components/unlock/unlock-link";
+
 const AboutPage = () => {
-    return <div>About Page</div>;
+    return (
+        <UnlockLink />
+    )
 }
 
 export default AboutPage;
