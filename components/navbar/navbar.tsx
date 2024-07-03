@@ -1,6 +1,5 @@
 import Link from "next/link"
 import Image from "next/image"
-import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar"
 import { Button } from "../ui/button";
 
 export default function NavBar() {
@@ -22,12 +21,19 @@ export default function NavBar() {
                     <Link href="#" className="text-black font-semibold" prefetch={false}>
                         History
                     </Link>
-                    <div className="flex items-center space-x-2">
+                    {/* <div className="flex items-center space-x-2">
                         <span className="text-black font-semibold">Hi, Viral</span>
                         <Avatar>
                             <AvatarImage src="/placeholder-user.jpg" />
                             <AvatarFallback>VS</AvatarFallback>
                         </Avatar>
+                    </div> */}
+                    <div className="flex flex-items-center">
+                        <Link href="/auth/login" passHref>
+                            <Button variant="login" size="lg">
+                                Login
+                            </Button>
+                        </Link>
                     </div>
                 </div>
             </div>
