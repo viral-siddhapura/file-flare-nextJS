@@ -2,7 +2,6 @@ import { EyeOffIcon, InfoIcon, LockIcon } from "lucide-react"
 import { Input } from "@/components/ui/input"
 import { Button } from "@/components/ui/button"
 import Image from "next/image"
-import Link from "next/link"
 
 const UnlockLink = () => {
     return (
