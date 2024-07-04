@@ -2,7 +2,6 @@
 
 import * as z from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "../ui/tabs";
 import { CardWrapper } from "./card-wrapper";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "../ui/form";
 import { useForm } from "react-hook-form";
@@ -12,10 +11,7 @@ import { Button } from "../ui/button";
 import { Input } from "../ui/input";
 import { FormError } from "./form-error";
 import { FormSuccess } from "./form-success";
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "../ui/card";
-import { LockIcon, MailCheckIcon } from "lucide-react";
-import Link from "next/link";
-import { count } from "console";
+import { signup } from "@/actions/signup";
 
 export const RegisterForm = () => {
 
@@ -37,6 +33,14 @@ export const RegisterForm = () => {
         setSuccess("");
 
         console.log(values);
+
+        startTransition(() => {
+            signup(values)
+                .then((response) => {
+                    setError(response.error);
+                    setSuccess(response.success);
+                });
+        });
     };
 
     return (
