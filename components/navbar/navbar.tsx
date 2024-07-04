@@ -29,7 +29,7 @@ export default function NavBar() {
                         </Avatar>
                     </div> */}
                     <div className="flex flex-items-center">
-                        <Link href="/auth/login" passHref>
+                        <Link href="/auth/signup" passHref>
                             <Button variant="login" size="lg">
                                 Login
                             </Button>
