@@ -2,19 +2,20 @@
 
 import * as z from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "../ui/tabs";
 import { CardWrapper } from "./card-wrapper";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "../ui/form";
 import { useForm } from "react-hook-form";
 import { LoginSchema } from "@/schemas";
-import { useState, useTransition } from "react";
+import { useEffect, useState, useTransition } from "react";
 import { Button } from "../ui/button";
 import { Input } from "../ui/input";
 import { FormError } from "./form-error";
 import { FormSuccess } from "./form-success";
+import { ConfirmationEmailForm } from "./confirmation-email-form";
 
 export const LoginForm = () => {
 
+    const [showTwoFactor, setShowTwoFactor] = useState<boolean>(true);
     const [error, setError] = useState<string | undefined>("");
     const [success, setSuccess] = useState<string | undefined>("");
     const [isPending, startTransition] = useTransition();
@@ -58,12 +59,13 @@ export const LoginForm = () => {
 
     return (
         <main className="flex flex-col items-center w-full py-40">
-            <Tabs defaultValue="account" className="w-[600px]">
-                <TabsList className="grid w-full grid-cols-2">
-                    <TabsTrigger value="account">1. Account</TabsTrigger>
-                    <TabsTrigger value="verification">2. Verification</TabsTrigger>
-                </TabsList>
-                <TabsContent value="account">
+            {
+                showTwoFactor && (
+                    <ConfirmationEmailForm />
+                )
+            }
+            {
+                !showTwoFactor && (
                     <CardWrapper
                         headerLabel="Create Secure Account"
                         backButtonLabel="Not a member yet?"
@@ -119,13 +121,13 @@ export const LoginForm = () => {
                                     disabled={isPending}
                                     className="w-full"
                                 >
-                                    Create an account
+                                    {showTwoFactor ? "Verify Code" : "Login"}
                                 </Button>
                             </form>
                         </Form>
                     </CardWrapper>
-                </TabsContent>
-            </Tabs>
+                )
+            }
         </main>
     )
 }
