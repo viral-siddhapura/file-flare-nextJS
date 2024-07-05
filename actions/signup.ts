@@ -5,6 +5,8 @@ import * as z from 'zod';
 import bcrypt from 'bcryptjs';
 import { getUserbyEmail } from "@/data/user";
 import { db } from "@/lib/db";
+import { generateVerificationToken } from "@/lib/tokens";
+import { sendVerificationEmail } from "@/lib/mail";
 
 export const signup = async (values : z.infer<typeof RegisterSchema>) => {
 
@@ -44,7 +46,11 @@ export const signup = async (values : z.infer<typeof RegisterSchema>) => {
         },
     });
 
-    
+    // Now generate the verification token
+    const verificationToken = await generateVerificationToken(email);
+
+    // send verification email to the user to activate the account
+    await sendVerificationEmail(verificationToken.email, verificationToken.token);
 
     return {
         success: "Please verify your email to activate your account.",
