@@ -1,5 +1,4 @@
 import { db } from "@/lib/db";
-import { UserPlus } from "lucide-react";
 
 export const getUserbyEmail = async (email: string) => {
     try {
