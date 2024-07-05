@@ -20,5 +20,10 @@ export const RegisterSchema = z.object({
     confirmPassword: z.string().min(1, {
         message: "Confirm Password is required",
     }),
-    code: z.optional(z.string()),
+});
+
+export const OTPSchema = z.object({
+    pin: z.string().min(6, {
+        message: "Your one-time password must be 6 characters.",
+    }),
 });
