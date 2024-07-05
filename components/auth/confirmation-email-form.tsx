@@ -1,3 +1,5 @@
+"use client";
+
 import { CardHeader, CardTitle, CardFooter, Card, CardContent } from "../ui/card"
 import { useState, useEffect } from "react"
 import { InputOTP, InputOTPGroup, InputOTPSlot } from "../ui/input-otp"
