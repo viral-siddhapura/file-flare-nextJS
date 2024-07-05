@@ -6,7 +6,7 @@ import { CardWrapper } from "./card-wrapper";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "../ui/form";
 import { useForm } from "react-hook-form";
 import { RegisterSchema } from "@/schemas";
-import { useEffect, useState, useTransition } from "react";
+import { useState, useTransition } from "react";
 import { Button } from "../ui/button";
 import { Input } from "../ui/input";
 import { FormError } from "./form-error";
