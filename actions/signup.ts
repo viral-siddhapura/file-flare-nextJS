@@ -17,9 +17,7 @@ export const signup = async (values : z.infer<typeof RegisterSchema>) => {
     }
 
     const { email, password, confirmPassword } = validateFields.data;
-
-    const hashedPassword = await bcrypt.hash(password, 10);
-    const hashedConfirmPassword = await bcrypt.hash(confirmPassword, 10);
+    console.log(email, password, confirmPassword);
 
     if(password !== confirmPassword){
         return {
@@ -27,10 +25,13 @@ export const signup = async (values : z.infer<typeof RegisterSchema>) => {
         }
     }
 
+    const hashedPassword = await bcrypt.hash(password, 10);
+    const hashedConfirmPassword = hashedPassword;
+
     const existingUser = await getUserbyEmail(email);
     if(existingUser){
         return {
-            error: "Email address already exists. Please use another email address!!",
+            error: "Email address already exists.",
         }
     }
 
@@ -43,8 +44,10 @@ export const signup = async (values : z.infer<typeof RegisterSchema>) => {
         },
     });
 
+    
+
     return {
-        success: "User created successfully!!",
+        success: "Please verify your email to activate your account.",
     }
 
 };
