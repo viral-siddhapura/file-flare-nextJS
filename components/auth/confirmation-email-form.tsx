@@ -1,19 +1,18 @@
-import { MailCheckIcon, LockIcon, Link } from "lucide-react"
-import { Button } from "../ui/button"
-import { Card, CardHeader, CardTitle, CardDescription, CardContent, CardFooter } from "../ui/card"
-import { Input } from "../ui/input"
+import { CardHeader, CardTitle, CardFooter, Card, CardContent } from "../ui/card"
 import { useState, useEffect } from "react"
+import { InputOTP, InputOTPGroup, InputOTPSlot } from "../ui/input-otp"
+import { MailCheckIcon } from "lucide-react"
+import { Button } from "../ui/button"
 
 export const ConfirmationEmailForm = () => {
 
+    const [otpValue, setOTPValue] = useState<string>("");
     const [countdown, setCountdown] = useState<number>(10);
-    const [error, setError] = useState(false)
 
     useEffect(() => {
         const timer = setInterval(() => {
             setCountdown((prevCountdown) => {
                 if (prevCountdown === 0) {
-                    setError(true)
                     clearInterval(timer)
                     return 0
                 }
@@ -21,7 +20,7 @@ export const ConfirmationEmailForm = () => {
             })
         }, 1000)
         return () => clearInterval(timer)
-    }, []);
+    }, [countdown === 10]);
 
     const formatTime = (time: number) => {
         const minutes = Math.floor(time / 60)
@@ -29,44 +28,77 @@ export const ConfirmationEmailForm = () => {
         return `${minutes}:${seconds.toString().padStart(2, "0")}`
     }
 
+    const onRequestAgain = () => {
+        setCountdown(10)
+    }
+
+    const onVerifyAccount = () => {
+        console.log("Verifying account...")
+    }
+
     return (
-        <div>
-            <Card className="w-[600px] shadow-lg">
-                <CardHeader className="flex flex-col items-center text-center">
-                    <MailCheckIcon className="w-16 h-16" />
-                    <CardTitle className="text-2xl font-semibold">Authenticate Your Account</CardTitle>
-                    <CardDescription className="text-gray-500">An email with a 6 digit verification code has been sent to your email.</CardDescription>
-                </CardHeader>
-                <CardContent className="flex flex-col items-start mt-5">
-                    <div className="relative flex items-center w-full">
-                        <Input type="text" placeholder="Verification Code" className="flex-1 pr-10" />
-                        <LockIcon className="absolute w-5 h-5 text-gray-500 right-2" />
-                    </div>
-                    {
-                        countdown === 0 && <div className="text-red-500">Time expired. Please request a new code.</div>
-                    }
-                </CardContent>
-                <CardFooter className="flex flex-col items-center justify-between">
-                    {
-                        countdown > 0 && <div className="text-xl text-black text-center font-semibold">{formatTime(countdown)}</div>
-                    }
-                    {
-                        countdown === 0 && <div>
-                            <span>Didn't receive a code? </span>
-                            <Link href="#" className="text-blue-600 hover:underline">
+        <Card className="w-[600px] shadow-lg">
+            <CardHeader className="flex flex-col items-center text-center">
+                <MailCheckIcon className="w-16 h-16" />
+                <CardTitle className="text-2xl font-semibold">Authenticate Your Account</CardTitle>
+            </CardHeader>
+            <CardContent className="flex flex-col justify-center items-center mt-4">
+                <InputOTP
+                    maxLength={6}
+                    value={otpValue}
+                    onChange={(value) => setOTPValue(value)}
+                >
+                    <InputOTPGroup>
+                        <InputOTPSlot index={0} />
+                        <InputOTPSlot index={1} />
+                        <InputOTPSlot index={2} />
+                        <InputOTPSlot index={3} />
+                        <InputOTPSlot index={4} />
+                        <InputOTPSlot index={5} />
+                    </InputOTPGroup>
+                </InputOTP>
+                <div className="text-center text-sm">
+                    {otpValue === "" ? (
+                        <p className="mt-4">Enter your one-time password.</p>
+                    ) : (
+                        <p className="mt-4">You entered: {otpValue}</p>
+                    )}
+                </div>
+            </CardContent>
+            <CardFooter className="flex flex-col items-center justify-between">
+                {
+                    countdown === 0 ? (
+                        <div className="text-red-500 mt-4">Time has expired. Please request a new code.</div>
+                    ) : (
+                        null
+                    )
+                }
+                {
+                    countdown > 0 && <div className="text-md text-black text-center font-semibold">{formatTime(countdown)}</div>
+                }
+                {
+                    countdown === 0 && (
+                        <div>
+                            <span>Didn't receive a code?</span>
+                            <Button
+                                variant={"link"}
+                                className="text-blue-600 text-md"
+                                onClick={onRequestAgain}
+                            >
                                 Request again
-                            </Link>
+                            </Button>
                         </div>
-                    }
-                    <Button
-                        variant="default"
-                        disabled={true}
-                        className="w-full mt-5"
-                    >
-                        Verify Account
-                    </Button>
-                </CardFooter>
-            </Card>
-        </div>
+                    )
+                }
+                <Button
+                    variant="default"
+                    disabled={otpValue.length !== 6 || countdown === 0}
+                    className="w-full mt-5"
+                    onClick={onVerifyAccount}
+                >
+                    Verify Account
+                </Button>
+            </CardFooter>
+        </Card>
     )
 }
