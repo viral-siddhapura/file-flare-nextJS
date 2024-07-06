@@ -2,8 +2,8 @@ import Credentials from "next-auth/providers/credentials";
 import type { NextAuthConfig } from "next-auth";
 
 import bcrypt from "bcryptjs";
-import { getUserbyEmail } from "@/data/user";
 import { LoginSchema } from "./schemas";
+import { getUserByEmail } from "./data/user";
 
 /***
  *  This is the new auth.config.ts file. It's used for Authentication providers configuration.
@@ -19,7 +19,7 @@ export default {
                 if (validatedFields.success) {
                     const { email, password } = validatedFields.data;
 
-                    const user = await getUserbyEmail(email);
+                    const user = await getUserByEmail(email);
                     if (!user || !user.password) {
                         return null;
                     }
