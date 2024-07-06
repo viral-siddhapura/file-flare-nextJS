@@ -1,9 +1,9 @@
-export const publicroutes = [
+export const publicRoutes = [
     "/",
     "/auth/confirm-email",
 ];
 
-export const authroutes = [
+export const authRoutes = [
     "/auth/login",
     "/auth/signup",
     "/auth/error",
