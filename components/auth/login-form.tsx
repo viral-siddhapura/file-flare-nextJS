@@ -12,6 +12,8 @@ import { Input } from "../ui/input";
 import { FormError } from "./form-error";
 import { FormSuccess } from "./form-success";
 import { ConfirmationEmailForm } from "./confirmation-email-form";
+import { login } from "@/actions/login";
+import Link from "next/link";
 
 export const LoginForm = () => {
 
@@ -34,27 +36,27 @@ export const LoginForm = () => {
 
         console.log(values);
 
-        // startTransition(() => {
-        //     login(values)
-        //         .then((data) => {
-        //             if (data?.error) {
-        //                 form.reset();
-        //                 setError(data?.error);
-        //             }
+        startTransition(() => {
+            login(values)
+                .then((data) => {
+                    if (data?.error) {
+                        form.reset();
+                        setError(data?.error);
+                    }
 
-        //             if (data?.success) {
-        //                 form.reset();
-        //                 setSuccess(data?.success);
-        //             }
+                    if (data?.success) {
+                        form.reset();
+                        setSuccess(data?.success);
+                    }
 
-        //             if (data?.twoFactor) {
-        //                 setShowTwoFactor(true);
-        //             }
-        //         })
-        //         .catch((error) => {
-        //             setError("Something went wrong.");
-        //         });
-        // });
+                    if (data?.twoFactor) {
+                        setShowTwoFactor(true);
+                    }
+                })
+                .catch((error) => {
+                    setError("Something went wrong.");
+                });
+        });
     };
 
     return (
@@ -109,6 +111,16 @@ export const LoginForm = () => {
                                                         type="password"
                                                     />
                                                 </FormControl>
+                                                <Button
+                                                    size="sm"
+                                                    variant="link"
+                                                    asChild
+                                                    className="px-0 font-normal"
+                                                >
+                                                    <Link href={"/auth/reset"}>
+                                                        Forgot Password?
+                                                    </Link>
+                                                </Button>
                                                 <FormMessage />
                                             </FormItem>
                                         )}
