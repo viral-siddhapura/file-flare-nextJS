@@ -74,3 +74,12 @@ model VerificationToken {
 
   @@unique([email, token])
 }
+
+model PasswordResetToken {
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  email     String
+  token     String   @unique
+  expiresAt DateTime
+
+  @@unique([email, token])
+}
