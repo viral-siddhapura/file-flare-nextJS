@@ -17,7 +17,7 @@ import Link from "next/link";
 
 export const LoginForm = () => {
 
-    const [showTwoFactor, setShowTwoFactor] = useState<boolean>(true);
+    const [showTwoFactor, setShowTwoFactor] = useState<boolean>(false);
     const [error, setError] = useState<string | undefined>("");
     const [success, setSuccess] = useState<string | undefined>("");
     const [isPending, startTransition] = useTransition();
@@ -69,8 +69,8 @@ export const LoginForm = () => {
             {
                 !showTwoFactor && (
                     <CardWrapper
-                        headerLabel="Create Secure Account"
-                        backButtonLabel="Not a member yet?"
+                        headerLabel="Create an Account"
+                        backButtonLabel="Not a member yet? Register here."
                         backButtonHref="/auth/signup"
                     >
                         <Form {...form}>
