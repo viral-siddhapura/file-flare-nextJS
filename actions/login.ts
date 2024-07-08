@@ -15,6 +15,7 @@ import { getTwoFactorConfirmationById } from "@/data/two-factor-confirmation";
 export const login = async (values: z.infer<typeof LoginSchema>) => {
 
     const validatedFields = LoginSchema.safeParse(values);
+    console.log("validated fields are : ",validatedFields);
 
     if(!validatedFields.success){
         return {
@@ -23,6 +24,7 @@ export const login = async (values: z.infer<typeof LoginSchema>) => {
     }
 
     const { email, password, code } = validatedFields.data;
+    console.log("email, password, code are : ",email, password, code);
 
     const existingUser = await getUserByEmail(email);
     if (!existingUser || !existingUser.email || !existingUser.password) {
@@ -30,6 +32,8 @@ export const login = async (values: z.infer<typeof LoginSchema>) => {
             error: "User does not exists!",
         };
     }
+
+    console.log("existingUser is : ",existingUser);
 
     // prevent login if email is not verified, send an email for verfication again
     if(!existingUser.emailVerified){
@@ -40,6 +44,9 @@ export const login = async (values: z.infer<typeof LoginSchema>) => {
 
     if(existingUser.isTwoFactorAuthEnabled && existingUser.email){
         if (code) {
+            
+            console.log("code is : ",code);
+
             // TODO: Verify two factor code
             const twoFactorToken = await getTwoFactorTokenByEmail(existingUser.email);
             if (!twoFactorToken){
@@ -76,12 +83,14 @@ export const login = async (values: z.infer<typeof LoginSchema>) => {
             });
 
         } else {
+            console.log("code is not generated yet, so send email immediately");
             const twoFactorToken = await generateTwoFactorToken(existingUser.email);
             await sendTwoFactorEmail(existingUser.email, twoFactorToken.token);
             return { twoFactor: true };
         }
 
         try {
+            console.log("code is not generated yet");
             await signIn("credentials", {
                 email,
                 password,
@@ -98,5 +107,9 @@ export const login = async (values: z.infer<typeof LoginSchema>) => {
             }
             throw error;
         }
+    }else{
+        console.log("bad things can happen!!");
+        console.log(existingUser.isTwoFactorAuthEnabled);
+        console.log(existingUser.email);
     }
 }
