@@ -9,7 +9,7 @@ import { Button } from "../ui/button"
 export const ConfirmationEmailForm = () => {
 
     const [otpValue, setOTPValue] = useState<string>("");
-    const [countdown, setCountdown] = useState<number>(10);
+    const [countdown, setCountdown] = useState<number>(180);
 
     useEffect(() => {
         const timer = setInterval(() => {
@@ -22,7 +22,7 @@ export const ConfirmationEmailForm = () => {
             })
         }, 1000)
         return () => clearInterval(timer)
-    }, [countdown === 10]);
+    }, [countdown === 180]);
 
     const formatTime = (time: number) => {
         const minutes = Math.floor(time / 60)
@@ -31,7 +31,7 @@ export const ConfirmationEmailForm = () => {
     }
 
     const onRequestAgain = () => {
-        setCountdown(10)
+        setCountdown(180)
     }
 
     const onVerifyAccount = () => {
