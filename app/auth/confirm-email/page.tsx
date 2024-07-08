@@ -1,8 +1,8 @@
-import { ConfirmationEmailForm } from "@/components/auth/confirmation-email-form";
+import { NewConfirmEmailForm } from "@/components/auth/confirm-email";
 
 const ConfirmEmailVerification = () => {
     return (
-        <ConfirmationEmailForm />
+        <NewConfirmEmailForm />
     )
 }
 
