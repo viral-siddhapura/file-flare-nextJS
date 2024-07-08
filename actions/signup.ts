@@ -3,7 +3,7 @@ import { RegisterSchema } from "@/schemas";
 import * as z from 'zod';
 
 import bcrypt from 'bcryptjs';
-import { getUserbyEmail } from "@/data/user";
+import { getUserByEmail } from "@/data/user";
 import { db } from "@/lib/db";
 import { generateVerificationToken } from "@/lib/tokens";
 import { sendVerificationEmail } from "@/lib/mail";
@@ -30,7 +30,7 @@ export const signup = async (values : z.infer<typeof RegisterSchema>) => {
     const hashedPassword = await bcrypt.hash(password, 10);
     const hashedConfirmPassword = hashedPassword;
 
-    const existingUser = await getUserbyEmail(email);
+    const existingUser = await getUserByEmail(email);
     if(existingUser){
         return {
             error: "Email address already exists.",
