@@ -1,17 +1,18 @@
 import NextAuth from 'next-auth';
 import authConfig from './auth.config';
-import { UserRole } from '@prisma/client';
-import { PrismaAdapter } from '@auth/prisma-adapter';
+import { UserRole } from '.prisma/client';
+import { PrismaAdapter } from "@auth/prisma-adapter";
 import { db } from './lib/db';
 import { getUserById } from './data/user';
+import { getTwoFactorConfirmationById } from './data/two-factor-confirmation';
 
 export const {
-    handlers: { GET, POST },
+    handlers: {GET, POST},
     auth,
     signIn,
     signOut,
 } = NextAuth({
-    pages: {
+    pages:{
         signIn: '/auth/login',
         error: '/auth/error',
     },
@@ -21,7 +22,7 @@ export const {
                 where: {
                     id: user.id,
                 },
-                data:{
+                data: {
                     emailVerified: new Date(),
                 },
             });
@@ -29,7 +30,46 @@ export const {
     },
     callbacks: {
 
-        async session({ token, session }){
+        async signIn({ user, account }){
+
+            console.log({
+                user,
+                account,
+            });
+
+            // Allow OAuth without email verification
+            if (account?.provider !== 'credentials'){
+                return true;
+            }   
+
+            // Prevent signIn without email verification
+            const exisitingUser = await getUserById(user.id);
+            if (!exisitingUser?.emailVerified){
+                return false;
+            }
+
+            // TODO: Add 2FA check here
+            if (exisitingUser.isTwoFactorAuthEnabled){
+                
+                const twoFactorConfirmation = await getTwoFactorConfirmationById(exisitingUser.id);
+                console.log({twoFactorConfirmation});
+                if (!twoFactorConfirmation){
+                    return false;
+                }
+
+                // Delete two factor confirmation for next sign in
+                await db.twoFactorConfirmation.delete({
+                    where: {
+                        id: twoFactorConfirmation.id,
+                    },
+                });
+            }
+
+            return true;
+
+        }, 
+
+        async session( { token, session } ){
             console.log({
                 sessionToken: token,
             })
@@ -41,22 +81,21 @@ export const {
             }
             return session;
         },
-
-        async jwt({token}){
-            if(!token.sub){
+        async jwt({ token }){
+            if (!token.sub){
                 return token;
             }
 
-            const existingUser = await getUserById(token.sub);
-            if(!existingUser){
+            const exisitingUser = await getUserById(token.sub);
+            if (!exisitingUser){
                 return token;
             }
-
-            token.role = existingUser.role;
+            
+            token.role = exisitingUser.role;
             return token;
-        }
+        },
     },
     adapter: PrismaAdapter(db),
     session: { strategy: 'jwt' },
     ...authConfig,
-})
+});
