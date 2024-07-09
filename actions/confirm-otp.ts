@@ -1,20 +1,35 @@
+"use server";
+
+import { getTwoFactorTokenByEmail } from "@/data/two-factor-token";
 import { getUserByEmail } from "@/data/user";
-import { OtpSchema } from "@/schemas";
-import { z } from "zod";
+import { db } from "@/lib/db";
 
-export const confirmOtp = async (values: z.infer<typeof OtpSchema>) => {
+export const confirmOtp = async (pin: string, email: string) => {
 
-    const validatedFields = OtpSchema.safeParse(values);
-    console.log("validated fields are : ",validatedFields);
+    console.log("pin is : ", pin);
+    console.log("email is : ", email);
 
-    if(!validatedFields.success){
+    const existingUser = await getUserByEmail(email);
+    console.log("existing user in OTP calling API is: ", existingUser);
+
+    if (!existingUser || !existingUser.email || !existingUser.password) {
         return {
-            error: "Invalid fields",
+            error: "User does not exists!",
         };
     }
 
-    const { pin } = validatedFields.data;
-    console.log("pin is : ",pin);
+    // get the twofactor token from the db
+    const twoFactorToken = await getTwoFactorTokenByEmail(email);
+    console.log("twoFactorToken is : ", twoFactorToken);
 
-    
+    // Now match the pin entered by the user and twoFactorToken
+    if (twoFactorToken?.token !== pin) {
+        return {
+            error: "Invalid pin",
+        };
+    }
+
+    return {
+        success: "OTP verified successfully",
+    };
 }
