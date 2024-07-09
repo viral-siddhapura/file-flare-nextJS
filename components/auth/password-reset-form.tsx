@@ -1,7 +1,7 @@
-import { error } from "console"
-import { Form, useForm } from "react-hook-form"
+"use client"
+
 import { Button } from "../ui/button"
-import { FormField, FormItem, FormLabel, FormControl, FormMessage } from "../ui/form"
+import { FormField, FormItem, FormLabel, FormControl, FormMessage, Form } from "../ui/form"
 import { CardWrapper } from "./card-wrapper"
 import { FormError } from "./form-error"
 import { FormSuccess } from "./form-success"
@@ -11,6 +11,7 @@ import { zodResolver } from "@hookform/resolvers/zod"
 import { useState, useTransition } from "react"
 import { z } from "zod"
 import { reset } from "@/actions/reset"
+import { useForm } from "react-hook-form"
 
 export const PasswordResetForm = () => {
 
