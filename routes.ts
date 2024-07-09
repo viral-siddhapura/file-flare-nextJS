@@ -8,9 +8,9 @@ export const authRoutes = [
     "/auth/signup",
     "/auth/error",
     "/auth/reset",
-    "/auth/forgot-password",
+    "/auth/reset-password",
 ];
 
 export const apiAuthPrefix = "/api/auth";
 
-export const DEFAULT_LOGIN_REDIRECT = "/";
+export const DEFAULT_LOGIN_REDIRECT = "/settings";
