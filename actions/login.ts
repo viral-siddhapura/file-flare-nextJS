@@ -102,7 +102,6 @@ export const login = async (values: z.infer<typeof LoginSchema>) => {
         }
 
         try {
-            console.log("code is not generated yet");
             await signIn("credentials", {
                 email,
                 password,
