@@ -11,6 +11,7 @@ import { getUserByEmail } from "@/data/user";
 import { getTwoFactorTokenByEmail } from "@/data/two-factor-token";
 import { db } from "@/lib/db";
 import { getTwoFactorConfirmationById } from "@/data/two-factor-confirmation";
+import bcrypt from "bcryptjs";
 
 export const login = async (values: z.infer<typeof LoginSchema>) => {
 
@@ -34,6 +35,17 @@ export const login = async (values: z.infer<typeof LoginSchema>) => {
     }
 
     console.log("existingUser is : ",existingUser);
+
+    // prevent login if the passwords are not matched? - throw error
+    const passwordMatch = await bcrypt.compare(
+        password, 
+        existingUser.password
+    );
+    if(!passwordMatch){
+        return {
+            error: "Invalid password",
+        };
+    }
 
     // prevent login if email is not verified, send an email for verfication again
     if(!existingUser.emailVerified){
