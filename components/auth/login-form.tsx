@@ -63,7 +63,7 @@ export const LoginForm = () => {
         <main className="flex flex-col items-center w-full py-40">
             {
                 showTwoFactor && (
-                    <ConfirmationEmailForm />
+                    <ConfirmationEmailForm email={form.getValues("email")} />
                 )
             }
             {
