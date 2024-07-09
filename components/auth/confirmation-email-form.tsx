@@ -22,7 +22,7 @@ export const ConfirmationEmailForm = () => {
             })
         }, 1000)
         return () => clearInterval(timer)
-    }, [countdown === 180]);
+    }, [countdown]);
 
     const formatTime = (time: number) => {
         const minutes = Math.floor(time / 60)
@@ -36,6 +36,7 @@ export const ConfirmationEmailForm = () => {
 
     const onVerifyAccount = () => {
         console.log("Verifying account...")
+        console.log("OTP value is : ", otpValue);
     }
 
     return (
