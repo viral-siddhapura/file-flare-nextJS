@@ -8,6 +8,7 @@ export const getTwoFactorConfirmationById = async (userId: string) => {
             },
         });
 
+        console.log("twoFactorConfirmation is : ",twoFactorConfirmation);
         return twoFactorConfirmation;
     } catch {
         return null;
