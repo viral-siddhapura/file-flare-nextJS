@@ -13,4 +13,5 @@ export const authRoutes = [
 
 export const apiAuthPrefix = "/api/auth";
 
-export const DEFAULT_LOGIN_REDIRECT = "/settings";
+export const OTP_REDIRECT = "/auth/confirm-otp";
+export const DEFAULT_LOGIN_REDIRECT = "/";
