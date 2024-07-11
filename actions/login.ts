@@ -2,16 +2,13 @@
 
 import { LoginSchema } from "@/schemas";
 import * as z from 'zod';
-import { signIn } from "@/auth";
-import { DEFAULT_LOGIN_REDIRECT } from "@/routes";
-import { AuthError } from "next-auth";
 import { generateVerificationToken, generateTwoFactorToken } from "@/lib/tokens";
 import { sendVerificationEmail, sendTwoFactorEmail } from "@/lib/mail";
 import { getUserByEmail } from "@/data/user";
-import { getTwoFactorTokenByEmail } from "@/data/two-factor-token";
-import { db } from "@/lib/db";
-import { getTwoFactorConfirmationById } from "@/data/two-factor-confirmation";
 import bcrypt from "bcryptjs";
+import { signIn } from "@/auth";
+import { OTP_REDIRECT } from "@/routes";
+import { AuthError } from "next-auth";
 
 export const login = async (values: z.infer<typeof LoginSchema>) => {
 
@@ -41,6 +38,7 @@ export const login = async (values: z.infer<typeof LoginSchema>) => {
         password, 
         existingUser.password
     );
+
     if(!passwordMatch){
         return {
             error: "Invalid password",
@@ -54,58 +52,17 @@ export const login = async (values: z.infer<typeof LoginSchema>) => {
         return { success: "Please verify your email address. Confirmation Email Sent!" };
     }
 
-    if(existingUser.isTwoFactorAuthEnabled && existingUser.email){
-        if (code) {
-            
-            console.log("code is : ",code);
-
-            // TODO: Verify two factor code
-            const twoFactorToken = await getTwoFactorTokenByEmail(existingUser.email);
-            if (!twoFactorToken){
-                return { error: "Invalid two factor token!" };
-            }
-            if (twoFactorToken.token !== code) {                
-                return { error: "Invalid two factor token!" };
-            } 
-
-            const hasExpired = new Date() > new Date(twoFactorToken.expiresAt);
-            if (hasExpired) {
-                return { error: "Two factor token has expired!" };
-            }
-
-            await db.twoFactorToken.delete({
-                where: {
-                    id: twoFactorToken.id,
-                },
-            });
-
-            const exisingConfirmation = await getTwoFactorConfirmationById(twoFactorToken.id);
-            if (exisingConfirmation) {
-                await db.twoFactorConfirmation.delete({
-                    where: {
-                        id: exisingConfirmation.id,
-                    },
-                });
-            }
-
-            await db.twoFactorConfirmation.create({
-                data: {
-                    userId: existingUser.id,
-                },
-            });
-
-        } else {
-            console.log("code is not generated yet, so send email immediately");
-            const twoFactorToken = await generateTwoFactorToken(existingUser.email);
-            await sendTwoFactorEmail(existingUser.email, twoFactorToken.token);
-            return { twoFactor: true };
-        }
+    if(existingUser.isTwoFactorAuthEnabled && existingUser.email) {
+        console.log("code is not generated yet, so send email immediately");
+        const twoFactorToken = await generateTwoFactorToken(existingUser.email);
+        await sendTwoFactorEmail(existingUser.email, twoFactorToken.token);
 
         try {
+            console.log("now we are redirecting to OTP_REDIRECT after signIn via credential part: ",OTP_REDIRECT);
             await signIn("credentials", {
                 email,
                 password,
-                redirectTo: DEFAULT_LOGIN_REDIRECT,
+                redirectTo: OTP_REDIRECT,
             });
         } catch (error) {
             if (error instanceof AuthError) {
@@ -118,7 +75,8 @@ export const login = async (values: z.infer<typeof LoginSchema>) => {
             }
             throw error;
         }
-    }else{
+
+    } else {
         console.log("bad things can happen!!");
         console.log(existingUser.isTwoFactorAuthEnabled);
         console.log(existingUser.email);
