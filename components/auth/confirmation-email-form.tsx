@@ -14,15 +14,8 @@ import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, For
 import { FormError } from "./form-error";
 import { FormSuccess } from "./form-success";
 
-interface ConfirmationEmailFormProps {
-    email: string;
-}
+export const ConfirmationEmailForm = () => {
 
-export const ConfirmationEmailForm = (
-    props: ConfirmationEmailFormProps
-) => {
-
-    const [otpValue, setOTPValue] = useState<string>("");
     const [error, setError] = useState<string | undefined>("");
     const [success, setSuccess] = useState<string | undefined>("");
     const [countdown, setCountdown] = useState<number>(180);
@@ -47,7 +40,7 @@ export const ConfirmationEmailForm = (
     }
 
     const onRequestAgain = () => {
-        setCountdown(180)
+        setCountdown(180);
     }
 
     const form = useForm<z.infer<typeof OtpSchema>>({
@@ -58,8 +51,11 @@ export const ConfirmationEmailForm = (
     })
 
     const onSubmit = (values: z.infer<typeof OtpSchema>) => {
+        setError("");
+        setSuccess("");
+
         startTransition(() => {
-            confirmOtp(values.pin, props.email)
+            confirmOtp(values.pin, email, password)
                 .then((data) => {
                     if (data?.error) {
                         setError(data?.error);
@@ -67,6 +63,7 @@ export const ConfirmationEmailForm = (
 
                     if (data?.success) {
                         setSuccess(data?.success);
+                        form.reset();
                     }
 
                 })
@@ -82,87 +79,66 @@ export const ConfirmationEmailForm = (
                 <MailCheckIcon className="w-16 h-16" />
                 <CardTitle className="text-2xl font-semibold">Authenticate Your Account</CardTitle>
             </CardHeader>
-            <CardContent className="flex flex-col justify-center items-center mt-4">
+            <CardContent>
                 <Form {...form}>
-                    <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
-                        <FormField
-                            control={form.control}
-                            name="pin"
-                            render={({ field }) => (
-                                <FormItem>
-                                    <FormLabel>One-Time Password</FormLabel>
-                                    <FormControl>
-                                        <InputOTP maxLength={6} {...field}>
-                                            <InputOTPGroup>
-                                                <InputOTPSlot index={0} />
-                                                <InputOTPSlot index={1} />
-                                                <InputOTPSlot index={2} />
-                                                <InputOTPSlot index={3} />
-                                                <InputOTPSlot index={4} />
-                                                <InputOTPSlot index={5} />
-                                            </InputOTPGroup>
-                                        </InputOTP>
-                                    </FormControl>
-                                    <FormDescription>
-                                        Please enter the one-time password sent to your email address.
-                                    </FormDescription>
-                                    <FormMessage />
-                                </FormItem>
-                            )}
-                        />
-                        <FormError message={error} />
-                        <FormSuccess message={success} />
-                        <Button type="submit">Submit</Button>
-                    </form>
+                    <div>
+                        <form onSubmit={form.handleSubmit(onSubmit)} className="flex flex-col items-center justify-center space-y-6">
+                            <FormField
+                                control={form.control}
+                                name="pin"
+                                render={({ field }) => (
+                                    <FormItem>
+                                        <FormLabel>One-Time Password</FormLabel>
+                                        <FormControl>
+                                            <InputOTP maxLength={6} {...field}>
+                                                <InputOTPGroup>
+                                                    <InputOTPSlot index={0} />
+                                                    <InputOTPSlot index={1} />
+                                                    <InputOTPSlot index={2} />
+                                                    <InputOTPSlot index={3} />
+                                                    <InputOTPSlot index={4} />
+                                                    <InputOTPSlot index={5} />
+                                                </InputOTPGroup>
+                                            </InputOTP>
+                                        </FormControl>
+                                        <FormDescription>
+                                            Please enter the one-time password sent to your email address.
+                                        </FormDescription>
+                                        <FormMessage />
+                                    </FormItem>
+                                )}
+                            />
+                            <FormError message={error} />
+                            <FormSuccess message={success} />
+                            {
+                                countdown === 0 ? (
+                                    <div className="text-red-500 mt-4">Time has expired. Please request a new code.</div>
+                                ) : (
+                                    null
+                                )
+                            }
+                            {
+                                countdown > 0 && <div className="text-md text-black text-center mt-4">Remaining time: {formatTime(countdown)}</div>
+                            }
+                            {
+                                countdown === 0 && (
+                                    <div>
+                                        <span>Didn't receive a code?</span>
+                                        <Button
+                                            variant={"link"}
+                                            className="text-blue-600 text-md"
+                                            onClick={onRequestAgain}
+                                        >
+                                            Request again
+                                        </Button>
+                                    </div>
+                                )
+                            }
+                            <Button type="submit" className="mt-4">Submit</Button>
+                        </form>
+                    </div>
                 </Form>
-                {/* <InputOTP
-                    maxLength={6}
-                    value={otpValue}
-                    onChange={(value) => setOTPValue(value)}
-                >
-                    <InputOTPGroup>
-                        <InputOTPSlot index={0} />
-                        <InputOTPSlot index={1} />
-                        <InputOTPSlot index={2} />
-                        <InputOTPSlot index={3} />
-                        <InputOTPSlot index={4} />
-                        <InputOTPSlot index={5} />
-                    </InputOTPGroup>
-                </InputOTP>
-                <div className="text-center text-sm">
-                    {otpValue === "" ? (
-                        <p className="mt-4">Enter your one-time password.</p>
-                    ) : (
-                        <p className="mt-4">You entered: {otpValue}</p>
-                    )}
-                </div> */}
             </CardContent>
-            <CardFooter className="flex flex-col items-center justify-between">
-                {
-                    countdown === 0 ? (
-                        <div className="text-red-500 mt-4">Time has expired. Please request a new code.</div>
-                    ) : (
-                        null
-                    )
-                }
-                {
-                    countdown > 0 && <div className="text-md text-black text-center font-semibold">{formatTime(countdown)}</div>
-                }
-                {
-                    countdown === 0 && (
-                        <div>
-                            <span>Didn't receive a code?</span>
-                            <Button
-                                variant={"link"}
-                                className="text-blue-600 text-md"
-                                onClick={onRequestAgain}
-                            >
-                                Request again
-                            </Button>
-                        </div>
-                    )
-                }
-            </CardFooter>
         </Card>
     )
 }
