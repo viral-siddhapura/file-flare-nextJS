@@ -5,6 +5,7 @@ import { PrismaAdapter } from "@auth/prisma-adapter";
 import { db } from './lib/db';
 import { getUserById } from './data/user';
 import { getTwoFactorConfirmationById } from './data/two-factor-confirmation';
+import { exit } from 'process';
 
 export const {
     handlers: {GET, POST},
@@ -48,22 +49,27 @@ export const {
                 return false;
             }
 
-            // TODO: Add 2FA check here
-            if (exisitingUser.isTwoFactorAuthEnabled){
-                
-                const twoFactorConfirmation = await getTwoFactorConfirmationById(exisitingUser.id);
-                console.log({twoFactorConfirmation});
-                if (!twoFactorConfirmation){
-                    return false;
-                }
+            console.log("existing user two factor is true or false : ",exisitingUser.isTwoFactorAuthEnabled);
+            console.log("existing user email is : ",exisitingUser.email);
+            console.log("existing user email verified is : ",exisitingUser.emailVerified);
+            console.log("existing user is id is : ",exisitingUser.id);
 
-                // Delete two factor confirmation for next sign in
-                await db.twoFactorConfirmation.delete({
-                    where: {
-                        id: twoFactorConfirmation.id,
-                    },
-                });
-            }
+            // TODO: Add 2FA check here
+            // if (exisitingUser.isTwoFactorAuthEnabled){
+                
+            //     const twoFactorConfirmation = await getTwoFactorConfirmationById(exisitingUser.id);
+            //     console.log(twoFactorConfirmation);
+            //     if (!twoFactorConfirmation){
+            //         return false;
+            //     }
+
+            //     // Delete two factor confirmation for next sign in
+            //     await db.twoFactorConfirmation.delete({
+            //         where: {
+            //             id: twoFactorConfirmation.id,
+            //         },
+            //     });
+            // }
 
             return true;
 
