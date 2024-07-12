@@ -6,7 +6,7 @@ export const ErrorCard = () => {
     return (
         <Card className="w-[600px] shadow-md">
             <CardHeader>
-                <header className="text-muted-foreground text-sm">"Something went wrong"</header>
+                <header className="text-muted-foreground text-sm">Something went wrong</header>
             </CardHeader>
             <CardFooter>
                 <BackButton label="Back to Login" href="/auth/login" />
