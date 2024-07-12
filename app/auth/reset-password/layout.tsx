@@ -8,9 +8,9 @@ export default function NewPasswordLayout({
 }>) {
     return (
         <div className={cn(
-            "min-h-screen bg-background font-sans antialiased"
+            "h-full flex flex-col items-center justify-center bg-background font-sans antialiased"
         )}>
-            <LoginNavBar />
+            {/* <LoginNavBar /> */}
             {children}</div>
     );
 }
