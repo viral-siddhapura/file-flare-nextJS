@@ -1,6 +1,9 @@
+"use client";
+
 import Link from "next/link"
 import Image from "next/image"
 import { Button } from "../ui/button";
+import { logout } from "@/actions/logout";
 
 export default function NavBar() {
     return (
@@ -28,12 +31,15 @@ export default function NavBar() {
                             <AvatarFallback>VS</AvatarFallback>
                         </Avatar>
                     </div> */}
-                    <div className="flex flex-items-center">
+                    <div className="flex flex-items-center space-x-4">
                         <Link href="/auth/signup">
-                            <Button variant="login" size="lg">
+                            <Button
+                                variant="login"
+                                size="lg" >
                                 Login
                             </Button>
                         </Link>
+                        <button type="submit" onClick={() => logout()}>Log out</button>
                     </div>
                 </div>
             </div>
