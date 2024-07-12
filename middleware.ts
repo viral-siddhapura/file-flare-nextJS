@@ -1,11 +1,10 @@
-import NextAuth from "next-auth";
 import authConfig from "./auth.config";
+import NextAuth from "next-auth";
 import {
     DEFAULT_LOGIN_REDIRECT,
     publicRoutes,
     authRoutes,
     apiAuthPrefix,
-    OTP_REDIRECT,
 } from "./routes";
 
 const { auth } = NextAuth(authConfig);
@@ -41,13 +40,7 @@ export default auth((req) => {
         return null;
     }
 
-    // if logout then redirect to "/" through checking loggedIn
-    if(loggedIn && nextUrl.pathname === "/auth/confirm-otp"){
-        console.log("logged in");
-        return Response.redirect(new URL("/", nextUrl));
-    }
-
-    if (!loggedIn && !isPublicRuote && !isSignUpRoute) {
+    if (!loggedIn && !isPublicRuote) {
         console.log("not logged in");
         return Response.redirect(new URL("/auth/login", nextUrl));
     }
