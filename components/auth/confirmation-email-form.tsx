@@ -123,7 +123,7 @@ export const ConfirmationEmailForm = () => {
                             {
                                 countdown === 0 && (
                                     <div>
-                                        <span>Didn't receive a code?</span>
+                                        <span>Didn&apos;t receive a code?</span>
                                         <Button
                                             variant={"link"}
                                             className="text-blue-600 text-md"
