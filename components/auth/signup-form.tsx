@@ -24,7 +24,7 @@ export const RegisterForm = () => {
         defaultValues: {
             email: "",
             password: "",
-            confirmPassword: "",
+            name: "",
         },
     });
 
@@ -44,11 +44,12 @@ export const RegisterForm = () => {
     };
 
     return (
-        <main className="flex flex-col items-center w-full py-40">
+        <main className="py-40">
             <CardWrapper
-                headerLabel="Create Secure Account"
+                headerLabel="Create an Account"
                 backButtonLabel="Already have an account?"
                 backButtonHref="/auth/login"
+                showSocial
             >
                 <Form {...form}>
                     <form
@@ -56,6 +57,23 @@ export const RegisterForm = () => {
                         className="space-y-6"
                     >
                         <div className="space-y-6">
+                            <FormField
+                                control={form.control}
+                                name="name"
+                                render={({ field }) => (
+                                    <FormItem>
+                                        <FormLabel>Name</FormLabel>
+                                        <FormControl>
+                                            <Input
+                                                {...field}
+                                                disabled={isPending}
+                                                placeholder="John Doe"
+                                            />
+                                        </FormControl>
+                                        <FormMessage />
+                                    </FormItem>
+                                )}
+                            />
                             <FormField
                                 control={form.control}
                                 name="email"
@@ -67,7 +85,7 @@ export const RegisterForm = () => {
                                                 {...field}
                                                 disabled={isPending}
                                                 type="email"
-                                                placeholder="cool-email@domain.com"
+                                                placeholder="john.doe@example.com"
                                             />
                                         </FormControl>
                                         <FormMessage />
@@ -80,24 +98,6 @@ export const RegisterForm = () => {
                                 render={({ field }) => (
                                     <FormItem>
                                         <FormLabel>Password</FormLabel>
-                                        <FormControl>
-                                            <Input
-                                                {...field}
-                                                disabled={isPending}
-                                                placeholder="******"
-                                                type="password"
-                                            />
-                                        </FormControl>
-                                        <FormMessage />
-                                    </FormItem>
-                                )}
-                            />
-                            <FormField
-                                control={form.control}
-                                name="confirmPassword"
-                                render={({ field }) => (
-                                    <FormItem>
-                                        <FormLabel>Confirm Password</FormLabel>
                                         <FormControl>
                                             <Input
                                                 {...field}
