@@ -55,7 +55,7 @@ export const ConfirmationEmailForm = () => {
         setSuccess("");
 
         startTransition(() => {
-            confirmOtp(values.pin, email, password)
+            confirmOtp(values.pin, "email", "password")
                 .then((data) => {
                     if (data?.error) {
                         setError(data?.error);
