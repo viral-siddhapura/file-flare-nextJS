@@ -1,11 +1,10 @@
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
-import { cn } from "@/lib/utils";
 import { auth } from "@/auth";
 import { SessionProvider } from "next-auth/react";
 
-const inter = Inter({ subsets: ["latin"], variable: "--font-sans" });
+const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
   title: "File-Flare",
@@ -23,12 +22,7 @@ export default async function RootLayout({
   return (
     <SessionProvider session={session}>
       <html lang="en" suppressHydrationWarning>
-        <head />
-        <body className={cn(
-          "min-h-screen bg-background font-sans antialiased",
-          inter.variable
-        )}>
-          {children}</body>
+        <body className={inter.className}>{children}</body>
       </html>
     </SessionProvider>
   );
