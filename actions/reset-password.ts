@@ -57,7 +57,6 @@ export const resetPassword = async (
         },
         data: {
             password: hashedPassword,
-            confirmPassword: hashedPassword,
         },
     });
 
