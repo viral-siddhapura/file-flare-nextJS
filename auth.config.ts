@@ -5,6 +5,10 @@ import bcrypt from "bcryptjs";
 import { LoginSchema } from "./schemas";
 import { getUserByEmail } from "./data/user";
 
+import Google from "next-auth/providers/google";
+import Facebook from "next-auth/providers/facebook"
+import Twitter from "next-auth/providers/twitter"
+
 /***
  *  This is the new auth.config.ts file. It's used for Authentication providers configuration.
  *  Providers are used to authenticate users with different services like Google, Facebook, Github, etc.
@@ -12,6 +16,12 @@ import { getUserByEmail } from "./data/user";
 
 export default {
     providers: [
+        Google(
+            {
+                clientId: process.env.GOOGLE_CLIENT_ID,
+                clientSecret: process.env.GOOGLE_CLIENT_SECRET,
+            }
+        ),
         Credentials({
             async authorize(credentials) {
                 const validatedFields = LoginSchema.safeParse(credentials);
