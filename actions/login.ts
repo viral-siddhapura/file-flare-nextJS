@@ -55,6 +55,8 @@ export const login = async (values: z.infer<typeof LoginSchema>) => {
         return { success: "Please verify your email address. Confirmation Email Sent!" };
     }
 
+    console.log("existingUser.isTwoFactorAuthEnabled is : ", existingUser.isTwoFactorAuthEnabled);
+
     if (existingUser.isTwoFactorAuthEnabled && existingUser.email) {
         if (code) {
             // TODO: Verify two factor code
