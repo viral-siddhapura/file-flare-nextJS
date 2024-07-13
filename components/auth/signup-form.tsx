@@ -46,9 +46,9 @@ export const RegisterForm = () => {
     return (
         <main className="py-40">
             <CardWrapper
-                headerLabel="Create an Account"
-                backButtonLabel="Already have an account?"
-                backButtonHref="/auth/login"
+                headerLabel={"Create an account"}
+                backButtonLabel={"Already have an account?"}
+                backButtonHref={"/auth/login"}
                 showSocial
             >
                 <Form {...form}>
