@@ -8,7 +8,6 @@ const SettingsPage = () => {
     const currentSession = useCurrentUser();
 
     const onClick = () => {
-        console.log("clicked in settings page");
         logout();
     };
 
@@ -16,7 +15,7 @@ const SettingsPage = () => {
         <div className="bg-white p-3 rounded-xl">
             {JSON.stringify(currentSession)}
             <form>
-                <button onClick={onClick} type="submit">Sign Out</button>
+                <button type="submit" onClick={onClick}>Log out</button>
             </form>
         </div>
     );
