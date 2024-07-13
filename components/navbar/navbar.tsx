@@ -4,8 +4,25 @@ import Link from "next/link"
 import Image from "next/image"
 import { Button } from "../ui/button";
 import { logout } from "@/actions/logout";
+import { useCurrentUser } from "@/hooks/use-current-user";
 
 export default function NavBar() {
+
+    const currentSession = useCurrentUser();
+    const userData = currentSession ? JSON.parse(JSON.stringify(currentSession)) : null;
+
+    if (!userData) {
+        return null;
+    }
+
+    const userEmail = userData?.email;
+    const userRole = userData?.role;
+    const userImage = userData?.image;
+    const userName = userData?.name;
+
+    console.log(userEmail, userRole, userImage, userName);
+
+
     return (
         <div className="flex h-full bg-white">
             <div className="flex basis-1/2 items-center justify-between p-4 border-b-2">
@@ -32,17 +49,30 @@ export default function NavBar() {
                         </Avatar>
                     </div> */}
                     <div className="flex flex-items-center space-x-4">
-                        <Link href="/auth/signup">
-                            <Button
-                                variant="login"
-                                size="lg" >
-                                Login
-                            </Button>
-                        </Link>
-                        <button type="submit" onClick={() => logout()}>Log out</button>
+                        {
+                            userName && (
+                                <>
+                                    <span className="text-black font-semibold">Hi, {userName} </span>
+                                    <button type="submit" onClick={() => logout()}>Log out</button>
+                                </>
+                            )
+                        }
+                        {
+                            !userName && (
+                                <div>
+                                    <Link href="/auth/signup">
+                                        <Button
+                                            variant="login"
+                                            size="lg" >
+                                            Login
+                                        </Button>
+                                    </Link>
+                                </div>
+                            )
+                        }
                     </div>
-                </div>
-            </div>
-        </div>
+                </div >
+            </div >
+        </div >
     );
 }
