@@ -1,6 +1,3 @@
-import LoginNavBar from "@/components/auth/login-nav-bar";
-import { cn } from "@/lib/utils";
-
 export default function LoginPageLayout({
     children,
 }: Readonly<{
