@@ -11,17 +11,12 @@ export default function NavBar() {
     const currentSession = useCurrentUser();
     const userData = currentSession ? JSON.parse(JSON.stringify(currentSession)) : null;
 
-    if (!userData) {
-        return null;
-    }
-
     const userEmail = userData?.email;
     const userRole = userData?.role;
     const userImage = userData?.image;
     const userName = userData?.name;
 
     console.log(userEmail, userRole, userImage, userName);
-
 
     return (
         <div className="flex h-full bg-white">
@@ -41,36 +36,20 @@ export default function NavBar() {
                     <Link href="#" className="text-black font-semibold" prefetch={false}>
                         History
                     </Link>
-                    {/* <div className="flex items-center space-x-2">
-                        <span className="text-black font-semibold">Hi, Viral</span>
-                        <Avatar>
-                            <AvatarImage src="/placeholder-user.jpg" />
-                            <AvatarFallback>VS</AvatarFallback>
-                        </Avatar>
-                    </div> */}
-                    <div className="flex flex-items-center space-x-4">
-                        {
-                            userName && (
-                                <>
-                                    <span className="text-black font-semibold">Hi, {userName} </span>
-                                    <button type="submit" onClick={() => logout()}>Log out</button>
-                                </>
-                            )
-                        }
-                        {
-                            !userName && (
-                                <div>
-                                    <Link href="/auth/signup">
-                                        <Button
-                                            variant="login"
-                                            size="lg" >
-                                            Login
-                                        </Button>
-                                    </Link>
-                                </div>
-                            )
-                        }
-                    </div>
+                    {userData ? (
+                        <div className="flex flex-items-center space-x-4">
+                            <span className="text-black font-semibold">Hi, {userName} </span>
+                            <Link href="/">
+                                <button type="submit" onClick={() => logout()}>Log out</button>
+                            </Link>
+                        </div>
+                    ) : (
+                        <Link href="/auth/signup">
+                            <Button variant="login" size="lg">
+                                Login
+                            </Button>
+                        </Link>
+                    )}
                 </div >
             </div >
         </div >

@@ -68,6 +68,7 @@ export const LoginForm = () => {
                 headerLabel={"Create an Account"}
                 backButtonLabel={"Not a member yet? Register here."}
                 backButtonHref={"/auth/signup"}
+                showSocial
             >
                 <Form {...form}>
                     <form

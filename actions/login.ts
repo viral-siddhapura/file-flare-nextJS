@@ -5,13 +5,12 @@ import * as z from 'zod';
 import { generateVerificationToken, generateTwoFactorToken } from "@/lib/tokens";
 import { sendVerificationEmail, sendTwoFactorEmail } from "@/lib/mail";
 import { getUserByEmail } from "@/data/user";
-import bcrypt from "bcryptjs";
 import { signIn } from "@/auth";
 import { AuthError } from "next-auth";
 import { getTwoFactorTokenByEmail } from "@/data/two-factor-token";
 import { getTwoFactorConfirmationById } from "@/data/two-factor-confirmation";
 import { db } from "@/lib/db";
-import { DEFAULT_LOGIN_REDIRECT } from "@/routes";
+import { DEFAULT_REDIRECT } from "@/routes";
 
 export const login = async (values: z.infer<typeof LoginSchema>) => {
 
@@ -35,18 +34,6 @@ export const login = async (values: z.infer<typeof LoginSchema>) => {
     }
 
     console.log("existingUser is : ", existingUser);
-
-    // prevent login if the passwords are not matched? - throw error
-    // const passwordMatch = await bcrypt.compare(
-    //     password,
-    //     existingUser.password
-    // );
-
-    // if (!passwordMatch) {
-    //     return {
-    //         error: "Invalid password",
-    //     };
-    // }
 
     // prevent login if email is not verified, send an email for verfication again
     if (!existingUser.emailVerified) {
@@ -104,7 +91,8 @@ export const login = async (values: z.infer<typeof LoginSchema>) => {
             await signIn("credentials", {
                 email,
                 password,
-                redirectTo: DEFAULT_LOGIN_REDIRECT,
+                redirect: true,
+                redirectTo: DEFAULT_REDIRECT,
             });
         } catch (error) {
             if (error instanceof AuthError) {

@@ -5,14 +5,14 @@ import { FcGoogle } from "react-icons/fc";
 import { FaSquareTwitter } from "react-icons/fa6";
 import { FaFacebook } from "react-icons/fa6";
 import { signIn } from "next-auth/react";
-import { DEFAULT_LOGIN_REDIRECT } from "@/routes";
+import { DEFAULT_REDIRECT } from "@/routes";
   
 export const SocialLoginOptions = () => {
 
     const onClick = (provider: "google" | "twitter" | "facebook") => {
         // call the appropriate provider
         signIn(provider, {
-            callbackUrl: DEFAULT_LOGIN_REDIRECT,
+            callbackUrl: DEFAULT_REDIRECT,
         })
     }
 
