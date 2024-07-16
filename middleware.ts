@@ -14,6 +14,8 @@ export default auth((req) => {
     const { nextUrl } = req;
     const loggedIn = !!req.auth;
 
+    console.log("nextUrl.pathname ", nextUrl.pathname);
+
     const isApiAuthRoute = nextUrl.pathname.startsWith(apiAuthPrefix);
     const isPublicRuote = publicRoutes.includes(nextUrl.pathname);
     const isAuthRoute = authRoutes.includes(nextUrl.pathname);
@@ -31,7 +33,7 @@ export default auth((req) => {
 
     if (!loggedIn && !isPublicRuote) {
         console.log("not logged in");
-        return Response.redirect(new URL("/auth/login", nextUrl));
+        return Response.redirect(new URL(nextUrl.pathname, nextUrl));
     }
 
     return null;
