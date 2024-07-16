@@ -38,38 +38,36 @@ const UploadFile = () => {
     };
 
     return (
-        <>
+        <div className="flex basis-1/2 items-center justify-center">
             {
                 state.files.length === 0 ? (
-                    <div className="flex basis-1/2 items-center justify-center">
-                        <Card className="w-full max-w-lg p-8 text-center">
-                            <UploadInformation />
-                            <CardContent>
-                                <Button
-                                    variant="default"
-                                    className="w-full mt-8"
-                                    onClick={handleButtonClick}
-                                >
-                                    Select File(s)
-                                </Button>
-                                <Input
-                                    type="file"
-                                    multiple
-                                    ref={fileInputRef}
-                                    onChange={handleFileChange}
-                                    style={{ display: 'none' }}
-                                />
-                                <p className="mt-8 text-sm text-gray-500">You can upload upto 1 GB for free</p>
-                            </CardContent>
-                        </Card>
-                    </div>
+                    <Card className="w-full max-w-lg mx-auto p-4 md:p-8 text-center">
+                        <UploadInformation />
+                        <CardContent>
+                            <Button
+                                variant="default"
+                                className="w-full mt-4 md:mt-8"
+                                onClick={handleButtonClick}
+                            >
+                                Select File(s)
+                            </Button>
+                            <Input
+                                type="file"
+                                multiple
+                                ref={fileInputRef}
+                                onChange={handleFileChange}
+                                style={{ display: 'none' }}
+                            />
+                            <p className="mt-4 md:mt-8 text-sm text-gray-500">You can upload upto 1 GB for free</p>
+                        </CardContent>
+                    </Card>
                 ) : (
                     <FileUploadOptionsProvider >
                         <UploadComplete />
                     </FileUploadOptionsProvider>
                 )
             }
-        </>
+        </div>
     )
 }
 
