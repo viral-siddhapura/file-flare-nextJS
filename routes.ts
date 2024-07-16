@@ -1,6 +1,7 @@
 export const publicRoutes = [
     "/",
     "/auth/confirm-email",
+    "/contactus",
 ];
 
 export const authRoutes = [
