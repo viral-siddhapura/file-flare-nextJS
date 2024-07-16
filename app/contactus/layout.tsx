@@ -1,0 +1,13 @@
+interface ProtectedLayoutProps {
+    children: React.ReactNode;
+}
+
+const ContactUsLayout = ({ children } : ProtectedLayoutProps) => {
+    return (
+        <div className="h-full w-full flex flex-col items-center justify-center">
+            {children}
+        </div>
+    );
+};
+
+export default ContactUsLayout;
