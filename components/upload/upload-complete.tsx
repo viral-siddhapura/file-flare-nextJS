@@ -10,6 +10,7 @@ import { useFileUploadOptions } from "./file-upload-options-context"
 import React from "react"
 import { ScrollArea } from "../ui/scroll-area"
 import { Input } from "../ui/input"
+import { generatePresignedUrls } from "@/actions/generate_presigned_urls"
 
 const UploadComplete = () => {
 
@@ -40,12 +41,32 @@ const UploadComplete = () => {
         dispatch({ type: "DELETE_FILE", payload: index });
     }
 
-    const handleUploadFiles = () => {
+    const handleUploadFiles = async () => {
         console.log("Expiry Date:", expiryDate);
         console.log("Download Limit:", downloadLimit);
         console.log("Password Protection:", isPasswordProtected ? "Enabled" : "Disabled");
         console.log("Files:", state.files);
         console.log("Emails:", emails);
+
+        /***
+         *  1. Create a preSigned URL as per array files
+         *  2. Upload each file to a unique preSigned URL through POST API
+         */
+
+        const preSignedUrls = await generatePresignedUrls(state.files);
+        
+        if(!preSignedUrls) {
+            console.log("No preSigned URLs");
+            return;
+        }
+
+        // iterate over PresignedURl and try to print each URL
+        preSignedUrls.forEach((url: any, fields: any) => {
+            console.log(url, fields, );
+        });
+
+        console.log("PreSigned URLs:", preSignedUrls);
+
     }
 
     return (
