@@ -18,7 +18,7 @@ const PasswordProtection = () => {
                     />
                 </div>
                 <p className="text-sm text-muted-foreground mt-4">
-                    When enabled, the password will be visible to you after your <br /> files are uploaded and the link is
+                    When enabled, the password will be visible to you after your files are uploaded and the link is
                     generated.
                 </p>
             </div>
