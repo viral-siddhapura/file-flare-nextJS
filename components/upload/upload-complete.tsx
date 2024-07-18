@@ -53,20 +53,11 @@ const UploadComplete = () => {
          *  2. Upload each file to a unique preSigned URL through POST API
          */
 
-        const preSignedUrls = await generatePresignedUrls(state.files);
-        
-        if(!preSignedUrls) {
-            console.log("No preSigned URLs");
-            return;
+        const response = await generatePresignedUrls(state.files);
+
+        if(response?.status === 200) {
+            console.log("response : ", response);
         }
-
-        // iterate over PresignedURl and try to print each URL
-        preSignedUrls.forEach((url: any, fields: any) => {
-            console.log(url, fields, );
-        });
-
-        console.log("PreSigned URLs:", preSignedUrls);
-
     }
 
     return (
