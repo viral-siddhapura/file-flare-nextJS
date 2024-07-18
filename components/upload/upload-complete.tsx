@@ -11,9 +11,11 @@ import React from "react"
 import { ScrollArea } from "../ui/scroll-area"
 import { Input } from "../ui/input"
 import { generatePresignedUrls } from "@/actions/generate_presigned_urls"
+import ViewUploadedFiles from "../viewFiles/view-uploaded-files"
 
 const UploadComplete = () => {
 
+    const [fileSuccessUpload, setFileSuccessUpload] = useState(false);
     const { state, dispatch } = useContext(FileUploadContext);
     const { expiryDate, downloadLimit, isPasswordProtected, emails } = useFileUploadOptions();
     const fileInputRef = React.useRef<HTMLInputElement>(null);
@@ -53,56 +55,85 @@ const UploadComplete = () => {
          *  2. Upload each file to a unique preSigned URL through POST API
          */
 
-        const response = await generatePresignedUrls(state.files);
+        const preSignedUrls = await generatePresignedUrls(state.files);
+        console.log("preSignedUrls : ", preSignedUrls);
 
-        if(response?.status === 200) {
-            console.log("response : ", response);
-        }
+        preSignedUrls.forEach(async (element: any, index: number) => {
+            console.log("element.url : ", element.url);
+            console.log("element.fields : ", element.fields);
+
+            const formData = new FormData();
+            Object.keys(element.fields).forEach(key => {
+                formData.append(key, element.fields[key]);
+            });
+
+            formData.append("file", state.files[index]);
+
+            // Upload the file to S3 using the presigned POST data
+            const uploadResponse = await fetch(element.url, {
+                method: 'POST',
+                body: formData
+            });
+
+            if (!uploadResponse.ok) {
+                throw new Error('File upload failed');
+            }
+
+            console.log('File uploaded successfully');
+            setFileSuccessUpload(true);
+
+        });
     }
 
     return (
         <div className="flex basis-1/2 items-center justify-center">
-            <Card className="w-full max-w-lg mx-auto">
-                <ScrollArea className="h-[400px]">
-                    <CardHeader>
-                        <div className="flex flex-col">
-                            {state.files.slice(0, showMore ? state.files.length : 2).map((file: { name: string; size: number; type: string }, index: number) => (
-                                <div key={index} className="flex items-center justify-between mb-2">
-                                    <div>
-                                        <h6 className="text-xs font-semibold">{file.name}</h6>
-                                        <p className="text-xs text-muted-foreground">{(file.size / 1024 / 1024).toFixed(2)} MB</p>
-                                    </div>
-                                    <Button variant="ghost" size="icon" onClick={() => handleDeleteFile(index)}>
-                                        <Image src="/trash_icon.svg" alt="Delete" width={24} height={24} />
-                                    </Button>
+            {
+                fileSuccessUpload ? (
+                    <ViewUploadedFiles />
+                ) : (
+                    <Card className="w-full max-w-lg mx-auto">
+                        <ScrollArea className="h-[400px]">
+                            <CardHeader>
+                                <div className="flex flex-col">
+                                    {state.files.slice(0, showMore ? state.files.length : 2).map((file: { name: string; size: number; type: string }, index: number) => (
+                                        <div key={index} className="flex items-center justify-between mb-2">
+                                            <div>
+                                                <h6 className="text-xs font-semibold">{file.name}</h6>
+                                                <p className="text-xs text-muted-foreground">{(file.size / 1024 / 1024).toFixed(2)} MB</p>
+                                            </div>
+                                            <Button variant="ghost" size="icon" onClick={() => handleDeleteFile(index)}>
+                                                <Image src="/trash_icon.svg" alt="Delete" width={24} height={24} />
+                                            </Button>
+                                        </div>
+                                    ))}
+                                    {state.files.length > 2 && (
+                                        <Button variant="link" className="text-blue-500" onClick={() => setShowMore(!showMore)}>
+                                            {showMore ? "Show Less" : `+${state.files.length - 2} More`}
+                                        </Button>
+                                    )}
                                 </div>
-                            ))}
-                            {state.files.length > 2 && (
-                                <Button variant="link" className="text-blue-500" onClick={() => setShowMore(!showMore)}>
-                                    {showMore ? "Show Less" : `+${state.files.length - 2} More`}
+                                <Input
+                                    type="file"
+                                    multiple
+                                    ref={fileInputRef}
+                                    onChange={handleFilesChange}
+                                    style={{ display: 'none' }}
+                                />
+                                <Button variant="outline" size="lg" className="w-full" onClick={handleFileSelection}>
+                                    <Image src="/plus_icon.svg" alt="Add" width={24} height={24} />
+                                    Add More Files ( {state.remainingSpace.toFixed(2)} MB Remaining )
                                 </Button>
-                            )}
-                        </div>
-                        <Input
-                            type="file"
-                            multiple
-                            ref={fileInputRef}
-                            onChange={handleFilesChange}
-                            style={{ display: 'none' }}
-                        />
-                        <Button variant="outline" size="lg" className="w-full" onClick={handleFileSelection}>
-                            <Image src="/plus_icon.svg" alt="Add" width={24} height={24} />
-                            Add More Files ( {state.remainingSpace.toFixed(2)} Remaining )
-                        </Button>
-                    </CardHeader>
-                    <CardContent className="space-y-4">
-                        <FileUploadOptions />
-                    </CardContent>
-                </ScrollArea>
-                <CardFooter>
-                    <Button className="w-full" onClick={handleUploadFiles}>Upload Files</Button>
-                </CardFooter>
-            </Card>
+                            </CardHeader>
+                            <CardContent className="space-y-4">
+                                <FileUploadOptions />
+                            </CardContent>
+                        </ScrollArea>
+                        <CardFooter>
+                            <Button className="w-full" onClick={handleUploadFiles}>Upload Files</Button>
+                        </CardFooter>
+                    </Card>
+                )
+            }
         </div>
     )
 }
