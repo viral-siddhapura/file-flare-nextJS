@@ -1,6 +1,4 @@
 export const generatePresignedUrls = async (files: File[]) => {
-    
-    console.log("files : ", files);
 
     const fileDetails = Array.from(files).map(file => ({
         fileName: file.name,
@@ -13,7 +11,8 @@ export const generatePresignedUrls = async (files: File[]) => {
             body: JSON.stringify({ files: fileDetails })
         });
 
-        return preSignedUrls;
+        return await preSignedUrls.json();
+
     } catch (error) {   
         console.log("error", error);
     }
