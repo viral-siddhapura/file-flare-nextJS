@@ -1,6 +1,6 @@
 export const generatePresignedUrls = async (files: File[]) => {
     
-    console.log("files", files);
+    console.log("files : ", files);
 
     const fileDetails = Array.from(files).map(file => ({
         fileName: file.name,
