@@ -7,6 +7,8 @@ import { logout } from "@/actions/logout";
 import { useCurrentUser } from "@/hooks/use-current-user";
 import { useState } from "react";
 import { Menu, X } from "lucide-react";
+import ShimmerButton from "../magicui/shimmer-button";
+import ShinyButton from "../magicui/shiny-button";
 
 export default function NavBar() {
 
@@ -52,9 +54,10 @@ export default function NavBar() {
                             </div>
                         ) : (
                             <Link href="/auth/signup">
-                                <Button variant="login" size="lg">
+                                <ShinyButton text="Login"/>
+                                {/* <Button variant="login" size="lg">
                                     Login
-                                </Button>
+                                </Button> */}
                             </Link>
                         )}
                     </div>
