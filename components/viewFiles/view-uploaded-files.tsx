@@ -1,15 +1,22 @@
-import { useContext } from "react";
-import { FileUploadContext } from "../upload/file-upload-context";
-import { CopyIcon, FileIcon, InfoIcon, LinkIcon } from "lucide-react";
+import { CopyIcon, InfoIcon, LinkIcon } from "lucide-react";
 import { Input } from "../ui/input";
 import { Button } from "../ui/button";
+import { useFileUploadOptions } from "../upload/file-upload-options-context";
 
 const ViewUploadedFiles = () => {
 
-    const { state, dispatch } = useContext(FileUploadContext);
+    // use context of useFileUploadOptions and get all values
+    const { expiryDate, downloadLimit, isPasswordProtected, emails } = useFileUploadOptions();
+
+    const generateLink = () => {
+        console.log("Expiry Date:", expiryDate);
+        console.log("Download Limit:", downloadLimit);
+        console.log("Password Protection:", isPasswordProtected ? "Enabled" : "Disabled");
+        console.log("Emails:", emails);
+    }
 
     return (
-        <div className="flex flex-col items-center justify-center p-6 bg-white border-2 border-green-500 rounded-full w-[450px] h-[450px] mx-auto">
+        <div className="flex flex-col items-center justify-center p-6 bg-white border-2 border-green-500 rounded-full w-[470px] h-[470px] mx-auto">
             <div className="flex items-center justify-center w-20 h-20 bg-gradient-to-r from-green-500 to-emerald-500 rounded-full">
                 <svg
                     xmlns="http://www.w3.org/2000/svg"
@@ -32,7 +39,7 @@ const ViewUploadedFiles = () => {
                 </Button>
             </div>
             <div className="flex flex-col justify-center mt-6">
-                <Button variant="ghost">
+                <Button variant="ghost" onClick={generateLink}>
                     <div className="flex flex-col items-center">
                         <LinkIcon className="w-5 h-5 text-blue-500" />
                         <span className="text-sm text-black">Copy Link</span>
