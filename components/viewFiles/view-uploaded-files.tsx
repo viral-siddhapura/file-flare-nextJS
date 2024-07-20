@@ -2,17 +2,47 @@ import { CopyIcon, InfoIcon, LinkIcon } from "lucide-react";
 import { Input } from "../ui/input";
 import { Button } from "../ui/button";
 import { useFileUploadOptions } from "../upload/file-upload-options-context";
+import { useContext } from "react";
+import { FileUploadContext } from "../upload/file-upload-context";
 
 const ViewUploadedFiles = () => {
 
     // use context of useFileUploadOptions and get all values
     const { expiryDate, downloadLimit, isPasswordProtected, emails } = useFileUploadOptions();
+    const { state, dispatch } = useContext(FileUploadContext);
 
-    const generateLink = () => {
+    const generateLink = async () => {
         console.log("Expiry Date:", expiryDate);
         console.log("Download Limit:", downloadLimit);
         console.log("Password Protection:", isPasswordProtected ? "Enabled" : "Disabled");
         console.log("Emails:", emails);
+        console.log("files are : ", state.files);
+
+        const fileDetails = Array.from(state.files).map(file => ({
+            fileName: file.name,
+            fileType: file.type,
+        }));
+
+        console.log("file details are : " , fileDetails);
+
+        // my expiryDate contains values as 1 day or 7 day as a string, so now remove "day" string from it
+        const numberOfExpiryDays = parseInt(expiryDate.replace('day', ''));
+        console.log("number of expiry days is ", numberOfExpiryDays);
+
+        const response = await fetch(`https://ailaerv7qgh6foxxliowfch6zq0magxe.lambda-url.us-east-1.on.aws/`, {
+            method: "POST",
+            body: JSON.stringify({ files: fileDetails, days: numberOfExpiryDays })
+        });
+
+        console.log("response of generating presigned URLs are : ", response);
+
+        const data = await response.json();
+        if(!data){
+            throw new Error("error in getting correct response of URLs");
+        }
+
+        console.log(data.url);
+        console.log(data.file);
     }
 
     return (
