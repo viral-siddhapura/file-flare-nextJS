@@ -4,6 +4,7 @@ import { Button } from "../ui/button";
 import { useFileUploadOptions } from "../upload/file-upload-options-context";
 import { useContext } from "react";
 import { FileUploadContext } from "../upload/file-upload-context";
+import { generateExpirationUrls } from "@/actions/generate_expiration_urls";
 
 const ViewUploadedFiles = () => {
 
@@ -23,26 +24,19 @@ const ViewUploadedFiles = () => {
             fileType: file.type,
         }));
 
-        console.log("file details are : " , fileDetails);
+        console.log("file details are : ", fileDetails);
 
         // my expiryDate contains values as 1 day or 7 day as a string, so now remove "day" string from it
         const numberOfExpiryDays = parseInt(expiryDate.replace('day', ''));
         console.log("number of expiry days is ", numberOfExpiryDays);
 
-        const response = await fetch(`https://ailaerv7qgh6foxxliowfch6zq0magxe.lambda-url.us-east-1.on.aws/`, {
-            method: "POST",
-            body: JSON.stringify({ files: fileDetails, days: numberOfExpiryDays })
-        });
-
+        const response = await generateExpirationUrls(state.files, numberOfExpiryDays);
         console.log("response of generating presigned URLs are : ", response);
 
-        const data = await response.json();
-        if(!data){
-            throw new Error("error in getting correct response of URLs");
-        }
-
-        console.log(data.url);
-        console.log(data.file);
+        response.forEach(async (element: any, index: number) => {
+            console.log("element.url : ", element.url);
+            console.log("element.file : ", element.file);
+        });
     }
 
     return (
