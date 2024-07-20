@@ -12,7 +12,7 @@ export default function ContactUsForm() {
                 <div className="space-y-2">
                     <h2 className="text-3xl font-bold text-black">Contact Us</h2>
                     <p className="text-muted-foreground">
-                        Couldn't find an answer in the Support Center or FAQ? Please submit your question through the contact form
+                        Couldn&apos;t find an answer in the Support Center or FAQ? Please submit your question through the contact form
                         and our team will be in touch with you shortly.
                     </p>
                 </div>
