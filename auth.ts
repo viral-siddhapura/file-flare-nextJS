@@ -30,30 +30,28 @@ export const {
     },
     callbacks: {
 
-        async signIn({ user, account }){
-
+        async signIn({ user, account }) {
             console.log({
                 user,
                 account,
             });
 
             // Allow OAuth without email verification
-            if (account?.provider !== 'credentials'){
+            if (account?.provider !== 'credentials') {
                 return true;
             }   
 
             // Prevent signIn without email verification
-            const exisitingUser = await getUserById(user.id);
-            if (!exisitingUser?.emailVerified){
+            const existingUser = await getUserById(user.id as string);
+            if (!existingUser?.emailVerified) {
                 return false;
             }
 
             // TODO: Add 2FA check here
-            if (exisitingUser.isTwoFactorAuthEnabled){
-                
-                const twoFactorConfirmation = await getTwoFactorConfirmationById(exisitingUser.id);
+            if (existingUser.isTwoFactorAuthEnabled) {
+                const twoFactorConfirmation = await getTwoFactorConfirmationById(existingUser.id);
                 console.log(twoFactorConfirmation);
-                if (!twoFactorConfirmation){
+                if (!twoFactorConfirmation) {
                     return false;
                 }
 
@@ -66,13 +64,11 @@ export const {
             }
 
             return true;
-
-        }, 
-
-        async session( { token, session } ){
+        },
+        async session({ token, session }) {
             console.log({
                 sessionToken: token,
-            })
+            });
             if (token.sub && session.user) {
                 session.user.id = token.sub;
             }
