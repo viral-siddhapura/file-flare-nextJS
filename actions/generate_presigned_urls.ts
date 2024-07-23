@@ -11,9 +11,16 @@ export const generatePresignedUrls = async (files: File[]) => {
             body: JSON.stringify({ files: fileDetails })
         });
 
+        if (!preSignedUrls.ok) {
+            const errorText = await preSignedUrls.text();
+            console.error("Lambda function error:", errorText);
+            throw new Error(`HTTP error! status: ${preSignedUrls.status}`);
+        }
+
         return await preSignedUrls.json();
 
     } catch (error) {   
+        console.error("Error in generateExpirationUrls:", error);
         console.log("error", error);
     }
 }
