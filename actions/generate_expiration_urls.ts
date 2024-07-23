@@ -11,9 +11,16 @@ export const generateExpirationUrls = async (files: File[], numberOfExpiryDays: 
             body: JSON.stringify({ files: fileDetails, days: numberOfExpiryDays })
         });
 
+        if (!expirationUrls.ok) {
+            const errorText = await expirationUrls.text();
+            console.error("Lambda function error:", errorText);
+            throw new Error(`HTTP error! status: ${expirationUrls.status}`);
+        }
+
         return await expirationUrls.json();
 
     } catch (error) {   
+        console.error("Error in generateExpirationUrls:", error);
         console.log("error", error);
     }
 }
