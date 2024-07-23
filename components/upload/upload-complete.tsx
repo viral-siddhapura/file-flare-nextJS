@@ -4,7 +4,7 @@ import { Card, CardHeader, CardContent, CardFooter } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import Image from "next/image"
 import FileUploadOptions from "./file-upload-options"
-import { useContext, useEffect, useState } from "react"
+import { useContext, useEffect, useRef, useState } from "react"
 import { FileUploadContext } from "./file-upload-context"
 import { useFileUploadOptions } from "./file-upload-options-context"
 import React from "react"
@@ -18,7 +18,7 @@ const UploadComplete = () => {
     const [fileSuccessUpload, setFileSuccessUpload] = useState(false);
     const { state, dispatch } = useContext(FileUploadContext);
     const { expiryDate, downloadLimit, isPasswordProtected, emails } = useFileUploadOptions();
-    const fileInputRef = React.useRef<HTMLInputElement>(null);
+    const fileInputRef = useRef<HTMLInputElement>(null);
     const [showMore, setShowMore] = useState(false);
 
     useEffect(() => {
