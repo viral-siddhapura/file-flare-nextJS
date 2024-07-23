@@ -2,15 +2,19 @@ import { CopyIcon, InfoIcon, LinkIcon } from "lucide-react";
 import { Input } from "../ui/input";
 import { Button } from "../ui/button";
 import { useFileUploadOptions } from "../upload/file-upload-options-context";
-import { useContext } from "react";
+import { useContext, useRef, useState } from "react";
 import { FileUploadContext } from "../upload/file-upload-context";
 import { generateExpirationUrls } from "@/actions/generate_expiration_urls";
+import { useToast } from "../ui/use-toast";
+import { Toast, ToastDescription, ToastProvider, ToastTitle } from "../ui/toast";
 
 const ViewUploadedFiles = () => {
 
     // use context of useFileUploadOptions and get all values
     const { expiryDate, downloadLimit, isPasswordProtected, emails } = useFileUploadOptions();
     const { state, dispatch } = useContext(FileUploadContext);
+    const { toast } = useToast();
+    const passwordRef = useRef<HTMLInputElement>(null);
 
     const generateLink = async () => {
         console.log("Expiry Date:", expiryDate);
@@ -37,6 +41,24 @@ const ViewUploadedFiles = () => {
             console.log("element.url : ", element.url);
             console.log("element.file : ", element.file);
         });
+
+        const randomToken = Math.random().toString(36).substring(2, 15) + "-" + Math.random().toString(36).substring(2, 15);
+        const link = `http://localhost:3000/${randomToken}`;
+        console.log("link is : ", link);
+
+        toast({
+            title: "Link Generated",
+            description: "copy link: " + link,
+            duration: 3000,
+            className: "bg-green-500 text-black",
+        });
+    }
+
+    const copyPassword = () => {
+        console.log(passwordRef.current?.value);
+        if (passwordRef.current) {
+            navigator.clipboard.writeText(passwordRef.current.value);
+        }
     }
 
     return (
@@ -57,8 +79,8 @@ const ViewUploadedFiles = () => {
                 <InfoIcon className="inline-block w-4 h-4 ml-1 text-gray-400" />
             </p>
             <div className="relative flex items-center justify-center mt-4">
-                <Input type="text" value="2EEF7D" readOnly className="w-40 p-2 text-center border rounded" />
-                <Button variant="ghost" className="absolute right-0 p-2">
+                <Input type="text" value="2EEF7D" readOnly ref={passwordRef} className="w-40 p-2 text-center border rounded" />
+                <Button variant="ghost" className="absolute right-0 p-2" onClick={copyPassword}>
                     <CopyIcon className="w-5 h-5 text-gray-500" />
                 </Button>
             </div>
@@ -72,7 +94,6 @@ const ViewUploadedFiles = () => {
             </div>
         </div>
     )
-
 }
 
 export default ViewUploadedFiles;
