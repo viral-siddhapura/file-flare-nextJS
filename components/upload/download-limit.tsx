@@ -8,7 +8,7 @@ const DownloadLimit = () => {
 
     return (
         <div>
-            <Label htmlFor="max-downloads">Max. number of downloads</Label>
+            <Label htmlFor="max-downloads">Download Limit</Label>
             <Select value={downloadLimit} onValueChange={setDownloadLimit}>
                 <SelectTrigger id="max-downloads">
                     <SelectValue placeholder="1" />
