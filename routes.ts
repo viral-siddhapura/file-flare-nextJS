@@ -1,8 +1,12 @@
 export const publicRoutes = [
     "/",
     "/auth/confirm-email",
+    "/about",
+    "/features",
     "/contactus",
 ];
+
+export const viewFileRoute = "/viewfiles";
 
 export const authRoutes = [
     "/auth/login",

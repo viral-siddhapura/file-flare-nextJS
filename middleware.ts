@@ -5,7 +5,9 @@ import {
     publicRoutes,
     authRoutes,
     apiAuthPrefix,
+    viewFileRoute,
 } from "./routes";
+import next from "next";
 
 const { auth } = NextAuth(authConfig);
 
@@ -15,6 +17,8 @@ export default auth((req) => {
 
     console.log("nextUrl.pathname ", nextUrl.pathname);
 
+    const isViewFilesRoute = nextUrl.pathname.startsWith(viewFileRoute);
+    console.log("isViewFilesRoute ", isViewFilesRoute);
     const isApiAuthRoute = nextUrl.pathname.startsWith(apiAuthPrefix);
     const isPublicRuote = publicRoutes.includes(nextUrl.pathname);
     const isAuthRoute = authRoutes.includes(nextUrl.pathname);
@@ -23,9 +27,17 @@ export default auth((req) => {
         return;
     }
 
+    if(isViewFilesRoute){
+        return ;
+    }
+
     if (isAuthRoute) {
+        console.log("isAuthRoute ", isAuthRoute);
         if (loggedIn) {
             return Response.redirect(new URL(DEFAULT_REDIRECT, nextUrl));
+        }
+        if(isViewFilesRoute){
+            return Response.redirect(new URL(nextUrl.pathname, nextUrl));
         }
         return;
     }
