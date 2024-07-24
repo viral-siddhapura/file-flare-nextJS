@@ -36,13 +36,13 @@ export default function NavBar() {
                         </h1>
                     </div>
                     <div className="hidden md:flex items-center space-x-4">
-                        <Link href="#" className="text-black font-semibold" prefetch={false}>
+                        <Link href="/features" className="text-black font-semibold" prefetch={false}>
                             Features
                         </Link>
-                        <Link href="#" className="text-black font-semibold" prefetch={false}>
+                        <Link href="/about" className="text-black font-semibold" prefetch={false}>
                             About
                         </Link>
-                        <Link href="#" className="text-black font-semibold" prefetch={false}>
+                        <Link href="/history" className="text-black font-semibold" prefetch={false}>
                             History
                         </Link>
                         {userData ? (
