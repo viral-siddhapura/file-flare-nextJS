@@ -43,7 +43,7 @@ const ViewUploadedFiles = () => {
         });
 
         const randomToken = Math.random().toString(36).substring(2, 15) + "-" + Math.random().toString(36).substring(2, 15);
-        const link = `http://localhost:3000/${randomToken}`;
+        const link = `http://localhost:3000/viewfiles/${randomToken}`;
         console.log("link is : ", link);
 
         toast({
