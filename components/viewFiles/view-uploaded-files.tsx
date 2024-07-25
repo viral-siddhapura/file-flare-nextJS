@@ -7,6 +7,8 @@ import { FileUploadContext } from "../upload/file-upload-context";
 import { generateExpirationUrls } from "@/actions/generate_expiration_urls";
 import { useToast } from "../ui/use-toast";
 import { Toast, ToastDescription, ToastProvider, ToastTitle } from "../ui/toast";
+import { db } from "@/lib/db";
+import { generateViewFilesTokenLink } from "@/actions/generate-view-files-token-link";
 
 const ViewUploadedFiles = () => {
 
@@ -31,7 +33,7 @@ const ViewUploadedFiles = () => {
         console.log("file details are : ", fileDetails);
 
         // my expiryDate contains values as 1 day or 7 day as a string, so now remove "day" string from it
-        const numberOfExpiryDays = parseInt(expiryDate.replace('day', ''));
+        const numberOfExpiryDays = parseInt(expiryDate.replace('day', '')) as number;
         console.log("number of expiry days is ", numberOfExpiryDays);
 
         const response = await generateExpirationUrls(state.files, numberOfExpiryDays);
@@ -42,16 +44,23 @@ const ViewUploadedFiles = () => {
             console.log("element.file : ", element.file);
         });
 
-        const randomToken = Math.random().toString(36).substring(2, 15) + "-" + Math.random().toString(36).substring(2, 15);
-        const link = `http://localhost:3000/viewfiles/${randomToken}`;
-        console.log("link is : ", link);
+        const password = passwordRef.current?.value || '';
+        const tokenLink = await generateViewFilesTokenLink(
+            numberOfExpiryDays,
+            isPasswordProtected,
+            password,
+        );
+
+        console.log("tokenLink is : ", tokenLink);
 
         toast({
             title: "Link Generated",
-            description: "copy link: " + link,
+            description: "copy link: " + tokenLink,
             duration: 3000,
             className: "bg-green-500 text-black",
         });
+
+
     }
 
     const copyPassword = () => {
