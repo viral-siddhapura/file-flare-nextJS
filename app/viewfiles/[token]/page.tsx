@@ -5,9 +5,20 @@ import { InfoIcon, EyeOffIcon } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { usePathname } from "next/navigation";
+import { useEffect } from "react";
+import { checkViewFilesTokenExpired } from "@/actions/check-view-files-token-expired";
 
 export default function TokenPage({ params }: { params: { token: string } }) {
-    
+
+    useEffect(() => {
+        const checkToken = async () => {
+            const token = params.token;
+            const isTokenExpired = await checkViewFilesTokenExpired(token);
+            console.log("isTokenExpired is : ", isTokenExpired);
+        };
+        checkToken();
+    }, [params.token]);
+
     console.log("TokenPage rendered with token:", params.token);
     const pathname = usePathname();
     console.log("pathname is : ", pathname);
