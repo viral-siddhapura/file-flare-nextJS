@@ -1,4 +1,4 @@
-import { CopyIcon, InfoIcon, LinkIcon } from "lucide-react";
+import { CircleCheckIcon, CopyIcon, InfoIcon, LinkIcon } from "lucide-react";
 import { Input } from "../ui/input";
 import { Button } from "../ui/button";
 import { useFileUploadOptions } from "../upload/file-upload-options-context";
@@ -9,13 +9,15 @@ import { useToast } from "../ui/use-toast";
 import { Toast, ToastDescription, ToastProvider, ToastTitle } from "../ui/toast";
 import { db } from "@/lib/db";
 import { generateViewFilesTokenLink } from "@/actions/generate-view-files-token-link";
+import { set } from "zod";
+import { link } from "fs";
 
 const ViewUploadedFiles = () => {
 
-    // use context of useFileUploadOptions and get all values
+    const [linkCopied, setLinkCopied] = useState(false);
+    const [existingToken, setExistingToken] = useState<string | null>(null);
     const { expiryDate, downloadLimit, isPasswordProtected, emails } = useFileUploadOptions();
     const { state, dispatch } = useContext(FileUploadContext);
-    const { toast } = useToast();
     const passwordRef = useRef<HTMLInputElement>(null);
 
     const generateLink = async () => {
@@ -25,42 +27,53 @@ const ViewUploadedFiles = () => {
         console.log("Emails:", emails);
         console.log("files are : ", state.files);
 
-        const fileDetails = Array.from(state.files).map(file => ({
-            fileName: file.name,
-            fileType: file.type,
-        }));
+        if (!existingToken) {
+            const fileDetails = Array.from(state.files).map(file => ({
+                fileName: file.name,
+                fileType: file.type,
+            }));
 
-        console.log("file details are : ", fileDetails);
+            console.log("file details are : ", fileDetails);
 
-        // my expiryDate contains values as 1 day or 7 day as a string, so now remove "day" string from it
-        const numberOfExpiryDays = parseInt(expiryDate.replace('day', '')) as number;
-        console.log("number of expiry days is ", numberOfExpiryDays);
+            // my expiryDate contains values as 1 day or 7 day as a string, so now remove "day" string from it
+            const numberOfExpiryDays = parseInt(expiryDate.replace('day', '')) as number;
+            console.log("number of expiry days is ", numberOfExpiryDays);
 
-        const response = await generateExpirationUrls(state.files, numberOfExpiryDays);
-        console.log("response of generating presigned URLs are : ", response);
+            const response = await generateExpirationUrls(state.files, numberOfExpiryDays);
+            console.log("response of generating presigned URLs are : ", response);
 
-        response.forEach(async (element: any, index: number) => {
-            console.log("element.url : ", element.url);
-            console.log("element.file : ", element.file);
-        });
+            const token = response[0].token;
+            console.log("token is : ", token);
+            setExistingToken(token);
 
-        const password = passwordRef.current?.value || '';
-        const tokenLink = await generateViewFilesTokenLink(
-            numberOfExpiryDays,
-            isPasswordProtected,
-            password,
-        );
+            response.forEach(async (element: any, index: number) => {
+                console.log("element.url : ", element.url);
+                console.log("element.file : ", element.file);
+            });
 
-        console.log("tokenLink is : ", tokenLink);
+            const password = passwordRef.current?.value || '';
+            const tokenLink = await generateViewFilesTokenLink(
+                token,
+                numberOfExpiryDays,
+                isPasswordProtected,
+                password,
+            );
+            setLinkCopied(true);
+            console.log("tokenLink is : ", tokenLink);
+        } else {
+            // Use the existing token to regenerate the link
+            const numberOfExpiryDays = parseInt(expiryDate.replace('day', '')) as number;
+            const password = passwordRef.current?.value || '';
+            const tokenLink = await generateViewFilesTokenLink(
+                existingToken,
+                numberOfExpiryDays,
+                isPasswordProtected,
+                password,
+            );
 
-        toast({
-            title: "Link Generated",
-            description: "copy link: " + tokenLink,
-            duration: 3000,
-            className: "bg-green-500 text-black",
-        });
-
-
+            setLinkCopied(true);
+            console.log("Regenerated tokenLink is : ", tokenLink);
+        }
     }
 
     const copyPassword = () => {
@@ -100,6 +113,12 @@ const ViewUploadedFiles = () => {
                         <span className="text-sm text-black">Copy Link</span>
                     </div>
                 </Button>
+                {linkCopied && (
+                    <div className="mt-2 flex items-center justify-center space-x-2 text-green-500">
+                        <CircleCheckIcon className="w-5 h-5" />
+                        <span>Link copied</span>
+                    </div>
+                )}
             </div>
         </div>
     )
