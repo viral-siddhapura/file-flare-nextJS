@@ -10,13 +10,13 @@ export const checkViewFilesTokenExpired = async (token: string) => {
             },
         });
 
-        console.log("tokenFromDb is : ", tokenFromDb);
-        
-        if(!tokenFromDb) {
-            return true;
+        if (!tokenFromDb) {
+            console.log("tokeFromDB: ", tokenFromDb);
+            return false;
         }
 
-        if(tokenFromDb.expiresAt < new Date()) {
+        if (tokenFromDb.expiresAt < new Date()) {
+            console.log("yes token has expired");
             return true;
         }
 
