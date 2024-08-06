@@ -60,6 +60,7 @@ const ViewUploadedFiles = () => {
             );
             setLinkCopied(true);
             console.log("tokenLink is : ", tokenLink);
+            navigator.clipboard.writeText(tokenLink as string);
         } else {
             // Use the existing token to regenerate the link
             const numberOfExpiryDays = parseInt(expiryDate.replace('day', '')) as number;
@@ -73,6 +74,7 @@ const ViewUploadedFiles = () => {
 
             setLinkCopied(true);
             console.log("Regenerated tokenLink is : ", tokenLink);
+            navigator.clipboard.writeText(tokenLink as string);
         }
     }
 
