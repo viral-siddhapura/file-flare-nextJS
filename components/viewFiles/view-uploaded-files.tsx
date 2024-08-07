@@ -82,7 +82,7 @@ const ViewUploadedFiles = () => {
     }
 
     return (
-        <div className="flex flex-col items-center justify-center p-6 bg-white border-4 border-green-500 rounded-full w-[470px] h-[470px] mx-auto">
+        <div className="flex flex-col items-center justify-center p-6 bg-white border-4 border-blue-500 rounded-full w-[470px] h-[470px] mx-auto">
             {
                 emails.length > 0 ? (
                     <div className="flex flex-col items-center justify-center p-6">
