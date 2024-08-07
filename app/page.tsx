@@ -10,7 +10,7 @@ export default function Home() {
       <NavBar />
       <main className="w-full min-h-screen flex flex-col md:flex-row items-center justify-center p-4">
         <UploadFile />
-        <NavBarInformation />
+        {/* <NavBarInformation /> */}
       </main>
     </FileUploadProvider>
   );
